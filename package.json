@@ -1,0 +1,36 @@
+{
+  "name": "infoprocessskills",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "开源的技能驱动报告生成引擎：一套引擎，多种报告技能",
+  "scripts": {
+    "list": "node cli.js list",
+    "run": "node cli.js run",
+    "doctor": "node cli.js doctor",
+    "show": "node cli.js show"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.72.0",
+    "express": "^5.1.0",
+    "marked": "^18.1.1",
+    "node-cron": "^4.2.1",
+    "node-html-parser": "^7.0.1",
+    "zod": "^3.25.76"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "license": "MIT",
+  "bin": {
+    "infoprocess": "./cli.js"
+  },
+  "keywords": [
+    "ai",
+    "report-generation",
+    "skills",
+    "deepseek",
+    "research",
+    "open-source"
+  ]
+}

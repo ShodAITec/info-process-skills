@@ -1,0 +1,714 @@
+{
+  "skill": {
+    "id": "ai-industry-deep-insight",
+    "name": "ai-industry-deep-insight",
+    "version": "1.5.0"
+  },
+  "task": "酒店管理",
+  "generatedAt": "2026-10-29T07:39:09.572Z",
+  "provider": {
+    "label": "TheHive · DeepSeek",
+    "model": "deepseek-ai/deepseek-v4.1-flash-1017"
+  },
+  "durationMs": 335947,
+  "usage": {
+    "input": 443087,
+    "output": 26928,
+    "reasoning": 3344,
+    "cached": 208384,
+    "calls": 17
+  },
+  "researchRounds": 12,
+  "sources": [
+    "doi.org/10.3390/info15060299",
+    "doi.org/10.1108/md-10-2024-2309",
+    "doi.org/10.1108/bpmj-11-2024-1086",
+    "doi.org/10.1080/10941665.2025.2555204",
+    "doi.org/10.1108/josm-12-2024-0535",
+    "doi.org/10.1108/ijchm-01-2024-0140",
+    "doi.org/10.3390/logistics10010005",
+    "doi.org/10.1108/ijsms-10-2025-376",
+    "openalex.org/w7155275550",
+    "doi.org/10.51483/ijaiml.6.2s.2026.279-287",
+    "doi.org/10.47772/ijriss.2026.100800427",
+    "doi.org/10.70382/bejasd.v13i2.068",
+    "doi.org/10.1057/s41599-025-04361-6",
+    "doi.org/10.53935/jomw.v2024i2.275",
+    "doi.org/10.32996/jcsts.2025.7.2.2",
+    "doi.org/10.18089/tms.20240304",
+    "doi.org/10.32996/jcsts.2026.5.2.4",
+    "doi.org/10.30574/gscbps.2024.26.2.0071",
+    "doi.org/10.22271/27069583.2026.v8.i1a.227",
+    "doi.org/10.5281/zenodo.18933663",
+    "doi.org/10.60078/2026-vol4-iss2-pp69-72",
+    "doi.org/10.31004/jptam.v10i2.41943",
+    "doi.org/10.1016/j.annale.2026.100227",
+    "openalex.org/w7218221855",
+    "news.qq.com/rain/a/20260228a01snb00",
+    "qianjia.com/html/2025-04/16_415364.html",
+    "finance.sina.com.cn/jjxw/2026-01-16/doc-inhhnqpa0767665.shtml",
+    "finance.sina.com.cn/tech/roll/2026-09-01/doc-iniqhfqh4800773.shtml",
+    "en.wikipedia.org/wiki/aiello_(company)",
+    "app.xinhuanet.com/news/article.html",
+    "en.wikipedia.org/wiki/2026_in_artificial_intelligence",
+    "gooduo.net/news/67",
+    "m.chinaz.com/2026/0722/1766528.shtml",
+    "hospitalitynet.org/news/4135013/more-than-half-of-hotels-use-ai-to-price-rooms-but-only-1-in-10-would-rely-on-it-for-most-decisions-roompricegenie-finds",
+    "roompricegenie.com/hotel-revenue-management-2026-survey-findings",
+    "hospitalitynet.org/explainer/4134957/ai-in-hotel-revenue-management-the-ultimate-guide",
+    "mews.com/en/blog/what-does-ai-ready-actually-mean-for-your-hotel-in-2026",
+    "guestara.com/post/hotel-ai-statistics-every-number-that-matters",
+    "mylighthouse.com/resources/blog/ai-hotel-revenue-management",
+    "rapideyeinspections.com/research/hotel-ai-adoption-statistics",
+    "tommasomariaricci.com/blog/ai-for-hospitality-industry-guide",
+    "stateofhotelai.com",
+    "hoteltechreport.com/success-stories/revenue-management/duetto/graduate-hotels",
+    "duettocloud.com/en-us/success-stories/page/5",
+    "duettocloud.com/en-us/success-stories/hotel-swexan-drives-exceptional-revpar-growth-with-duetto",
+    "duettocloud.com/en-us/who-we-help/hotels",
+    "ideas.com",
+    "revevolve.ai/blog/hotel-revenue-management-software",
+    "duettocloud.com/en-us/success-stories/wharf-hotels",
+    "letsaskclaire.com/hospitality/revenue-management-ai",
+    "superagi.com/top-10-ai-tools-transforming-revenue-management-in-the-hospitality-industry-2",
+    "hospitality-on.com/en/hospitality/hotel-ai-enters-through-back-door-chain-hotels",
+    "hospitalitynet.org/editorial/4134992/google-ai-mode-books-hotels-now-independent-hotels-lost-ad-visibility-the-same-day-independents-are-8x-more-invisible-to-ai-than-chains",
+    "teacode.io/blog/ai-in-hospitality-guest-experience",
+    "hospitalitynet.org/opinion/4134976/are-hotels-closing-their-doors-to-ai-agents",
+    "skift.com/2026/10/02/hilton-isnt-blocking-new-ai-agents-but-its-not-always-letting-them-in",
+    "whiteskyhospitality.com/how-the-worlds-biggest-hotel-chains-are-actually-using-ai",
+    "hotelnewsresource.com/article143373.html",
+    "hotel-online.com/news/are-hotels-closing-their-doors-to-ai-agents-part-2",
+    "hotelnewsresource.com/article143405.html",
+    "guandian.cn/m/show/614124",
+    "m.chinaventure.com.cn/news/80-20250403-385775.html",
+    "stock.10jqka.com.cn/20261016/c680755705.shtml",
+    "m.dzplus.dzng.com/share/general/0/news2359151rflgizpvfsmae",
+    "finance.sina.com.cn/stock/stockzmt/2025-10-04/doc-infstxva3890951.shtml",
+    "finance.sina.com.cn/stock/stockzmt/2025-03-22/doc-ineqpefr5942615.shtml",
+    "yunjichina.com.cn",
+    "taogongwei.com/news/detail/11690",
+    "hstong.com/news/detail/25032621133684340",
+    "stayntouch.com/ai-in-hotels",
+    "assistents.ai/blogs/agentic-ai-in-hospitality-industry-2026",
+    "directful.com/blog/hotels-use-ai-to-increase-direct-bookings",
+    "digitalapplied.com/blog/agentic-ai-for-hospitality-travel-marketing-vertical-2026",
+    "sysevo.io/blog/hotel-ai-booking-case-study-direct-revenue",
+    "webflow.canarytechnologies.com/post/hotel-ai-customer-service-case-studies",
+    "jugl.com/ai-agents-for-hotels-travel",
+    "ottotheagent.com/blog/hotel-ai-booking-systems-case-studies",
+    "nuplay.ai/blogs/ai-hotel-case-studies-key-use-cases",
+    "doi.org/10.1109/jiot.2024.3407119",
+    "doi.org/10.63332/joph.v5i6.2073",
+    "doi.org/10.3390/jtaer20040337",
+    "doi.org/10.3390/info16060450",
+    "doi.org/10.15388/24-infor559",
+    "doi.org/10.18267/j.aip.227",
+    "doi.org/10.5281/zenodo.20781270",
+    "doi.org/10.68159/a521932518",
+    "doi.org/10.3390/math14060929",
+    "doi.org/10.3390/sym18061046",
+    "sohu.com/a/1025156573_121479694",
+    "news.qq.com/rain/a/20260118a072le00",
+    "jiemian.com/article/13900133.html",
+    "finance.sina.com.cn/wm/2026-05-29/doc-inhzqimi9426295.shtml",
+    "weibo.com/2/detail/comos:nittzpz7957489",
+    "sina.cn/news/article/nishrau8181667.html",
+    "finance.sina.com.cn/stock/estate/integration/2026-03-02/doc-inhpqknr1450854.shtml",
+    "xueqiu.com/s/01179/392659106",
+    "finance.china.com/xiaofei/13004691/20260408/49395601.html",
+    "hoteltechreport.com/success-stories/revenue-management/duetto/amanta-hotels-residencies",
+    "hoteltechreport.com/revenue-management/revenue-management-systems/duetto",
+    "mews.com/en/blog/supercharge-your-revenue-management-strategy-with-duetto",
+    "duettocloud.com/en-us/success-stories/duetto-drives-28-increase-in-revpar-for-rimc-hotels-resorts-group",
+    "duettocloud.com/en-us/success-stories/graduate-hotels",
+    "superagi.com/top-10-ai-tools-transforming-revenue-analytics-in-the-hospitality-industry",
+    "pmc.ncbi.nlm.nih.gov/articles/pmc13470400",
+    "oxmaint.com/industries/hospitality/ai-housekeeping-optimization-workforce-scheduling",
+    "arxiv.org/pdf/2301.03382",
+    "sciencedirect.com/science/article/pii/s2199853125000228",
+    "sciencedirect.com/science/article/abs/pii/s0160738326001829",
+    "intercleanshow.com/news/data/ai-powered-housekeeping-innovations-in-the-hospitality-sector",
+    "hospitalityos.tech/research/ai-housekeeping-operations-optimization",
+    "hospitalityos.tech/research/hotel-labor-scheduling-ai-forecasting",
+    "hospitalityos.tech/research/reduce-hotel-labor-costs-ai",
+    "sohu.com/a/992830392_122279996",
+    "m.traveldaily.cn/article/169197",
+    "m.traveldaily.cn/article/178422",
+    "zhuanlan.zhihu.com/p/2073822731142014489",
+    "sgpjbg.com/bggroup/386.html",
+    "xiexietrip.com/news/global-hotel-labor-shortage-tech-ota",
+    "jtepms.cn/post/230.html",
+    "culture-travel.cctv.com/2026/04/23/artiufffve5r8drewux3lgm6260423.shtml",
+    "h33.top/report/20260830-51e4",
+    "jjckb.cn/20260603/24b0598f265646ec8d09d5f351682b45/c.html",
+    "cloud.tencent.com/developer/article/2632930",
+    "news.qq.com/rain/a/20260602a0a5qk00",
+    "guancha.cn/economy/2026_07_15_823781.shtml",
+    "finance.sina.cn/stock/jdts/2026-07-15/detail-inihwezh4864898.d.html",
+    "finance.people.com.cn/n1/2026/0319/c1004-40685001.html",
+    "wap.eastmoney.com/a/202606033759113546.html",
+    "epr.ink/m/news/143735",
+    "paulweiss.com/insights/client-memos/third-circuit-revives-algorithmic-pricing-antitrust-claims-against-casino-hotels",
+    "cov.com/en/news-and-insights/insights/2026/08/third-circuit-reinstates-algorithmic-pricing-antitrust-lawsuit-cornish-adebiyi-v-caesars-entertainment-inc",
+    "lit-antitrust.aoshearman.com/third-circuit-reverses-dismissal-of-algorithmic-price-fixing-claims-against-atlantic-city-casino-hotels",
+    "foley.com/insights/publications/2026/08/third-circuit-revives-algorithmic-price-fixing-claims-against-atlantic-city-hotel-casinos",
+    "alston.com/en/insights/publications/2026/08/cornish-adebiyi-caesars-entertainment-price-fixing",
+    "bakermckenzie.com/en/insight/publications/2026/08/united-states-third-circuit-revives-algorithmic-pricing-case",
+    "arnoldporter.com/en/perspectives/advisories/2026/08/leaving-las-vegas-third-circuit-breaks-from-ninth-circuit-ruling-on-algorithmic-pricing-claims",
+    "susmangodfrey.com/wins/susman-godfrey-secures-third-circuit-reversal-reviving-landmark-ai-price-fixing-suit-against-atlantic-city-casinos",
+    "moginlawllp.com/third-circuit-algorithmic-pricing-antitrust-cendyn",
+    "m.traveldaily.cn/article/189595",
+    "sohu.com/a/1010358927_121823491",
+    "pdf.dfcfw.com/pdf/h3_ap202603311820910990_1.pdf",
+    "fxbaogao.com/detail/5326035",
+    "fxbaogao.com/detail/4819484",
+    "ttgchina.com/2026/03/27/2026%e4%b8%ad%e5%9b%bd%e9%85%92%e5%ba%97%e4%b8%9a%e6%95%b0%e5%ad%97%e5%8c%96%e8%bd%ac%e5%9e%8b-%e8%81%9a%e7%84%a6%e6%8f%90%e8%b4%a8%e5%a2%9e%e6%95%88",
+    "shijigroup.cn/blog/158.html",
+    "ctha.com.cn/detail-79-111-4047.html",
+    "chmfe.com/sys-nd/5601.html",
+    "doi.org/10.1007/s00146-026-03060-3",
+    "doi.org/10.3390/tourhosp7040107",
+    "doi.org/10.48550/arxiv.2606.14314",
+    "doi.org/10.30525/2256-0742/2026-12-2-324-332",
+    "doi.org/10.48550/arxiv.2606.22698",
+    "doi.org/10.48550/arxiv.2609.17989",
+    "doi.org/10.48550/arxiv.2603.19423",
+    "doi.org/10.1016/j.tourman.2026.105557",
+    "doi.org/10.48550/arxiv.2605.16309",
+    "doi.org/10.48550/arxiv.2607.19837",
+    "doi.org/10.48550/arxiv.2602.10453",
+    "doi.org/10.48550/arxiv.2606.05806",
+    "doi.org/10.1016/j.jbusres.2024.114542",
+    "doi.org/10.1108/ijchm-08-2023-1271",
+    "doi.org/10.3390/bs15050696",
+    "doi.org/10.1016/j.technovation.2024.103081",
+    "doi.org/10.1080/02642069.2024.2305451",
+    "doi.org/10.1177/13548166261418787",
+    "doi.org/10.1108/tr-08-2025-0968",
+    "doi.org/10.1016/j.jik.2024.100545",
+    "doi.org/10.1787/8d900037-en",
+    "doi.org/10.70593/978-81-981367-8-7_1",
+    "doi.org/10.1080/13683500.2026.2674077",
+    "hijiffy.com/resources/articles/eu-ai-act",
+    "compound.law/en-de/ai-act/hospitality",
+    "nelios.com/eu-ai-act-hotel-websites-marketing",
+    "hotelnewsresource.com/article141048.html",
+    "200oksolutions.com/blog/the-eu-ai-acts-impact-on-hospitality-what-dynamic-pricing-and-guest-profiling-systems-must-do-now",
+    "allainews.net/ai-for-hotels-2026",
+    "hospitalityos.tech/research/hotel-ai-governance-policy-framework",
+    "hospitalityos.tech/research/hotel-ai-disclosure-guest-trust",
+    "letsaskclaire.com/hospitality/hotel-chatbot-compliance",
+    "pricepoint.co/blog/revenue-management-wont-be-a-job-anymore-and-thats-a-good-thing",
+    "hotelmanagement.mydigitalpublication.com/publication",
+    "hoteltechnologynews.com/2025/11/how-ai-will-rewrite-hotel-revenue-management-systems-in-2026",
+    "rategain.com/blog/ai-powered-revenue-management",
+    "jetstreamtech.io/blog/ai-hotel-revenue-management",
+    "otelai.com/resources/hotel-revenue-manager-ai-career-guide",
+    "otelciro.com/en/news/hotel-ai-adoption-82-percent-2026",
+    "hotellab.io/articles/how-ai-is-revolutionizing-revenue-management-in-the-hospitality-industry",
+    "otelciro.com/en/resources/blog/hotel-ai-adoption-82-percent-2026",
+    "hoteltechreport.com/revenue-management/revenue-management-systems/ideas",
+    "hoteltechreport.com/revenue-management/revenue-management-systems",
+    "hotel-online.com/news/ideas-recognized-in-three-categories-in-2026-hoteltechawards",
+    "ideas.com/client-success",
+    "ideas.com/hotel-rooms/casino-hotels",
+    "ideas.com/revenue-management-for-hospitality",
+    "ideas.com/hotel-rooms/resort-hotels",
+    "ideas.com/hospitality-technology-consulting",
+    "laborfinders.com/employers/blog/the-state-of-the-hospitality-staffing-shortage",
+    "marketscale.com/industries/hospitality/more-than-half-of-hotels-are-still-short-staffed-despite-70-raising-pay",
+    "higherme.com/blog/why-hotels-cant-find-staff-and-what-actually-fixes-it",
+    "theservicecompanies.com/overcoming-hospitality-staffing-shortages",
+    "ahla.com/news/rising-cost-staffing-challenges-persist-hotels-travel-demand-expected-hold-steady",
+    "tumihospitality.com/the-complete-guide-to-hotel-staffing-solutions",
+    "sorsx.com/blog/hotel-hiring-2026",
+    "corbettrestaurantgroup.com/insights/hotel-labor-stack-131-billion-may-2026",
+    "news.marketersmedia.com/resortcleaning-addresses-housekeeping-labor-shortage-with-new-tools/89204753",
+    "hotelfriend.com/blogpost/book-hotel-google-ai-mode",
+    "skift.com/2026/08/27/googles-agentic-hotel-booking-tool-comes-to-ai-mode",
+    "skift.com/2026/02/11/marriott-google-agentic-travel-booking",
+    "visitingmedia.com/blog/google-agentic-move-hotel-search-to-booking",
+    "hoteldive.com/news/google-introduces-ai-mode-hotel-booking/829265",
+    "seosherpa.com/google-is-testing-direct-hotel-booking-links-in-ai-mode",
+    "getaibook.com/news/google-ai-mode-adds-agentic-hotel-booking-flight-tracking",
+    "dmcquote.com/blog/post/google-ai-mode-hotel-booking-travel-agents",
+    "insidehs.com/google-ai-mode-hotel-booking",
+    "f9xr.github.io/articles/2026/08/27/book-hotel-google-ai-mode.html",
+    "stock.10jqka.com.cn/20260925/c680283701.shtml",
+    "163.com/dy/article/l818ll0e0511n33r.html",
+    "163.com/dy/article/l82ggfmb0519u3i5.html",
+    "ttgchina.com/2026/09/24/%e7%be%8e%e5%9b%a2%e5%8f%91%e5%b8%83%e6%97%a2%e7%99%bd%e6%97%97%e8%88%b0%e7%89%88-%e9%85%92%e5%ba%97ai%e4%bb%8e%e6%8f%90%e6%95%88%e5%8a%a9%e6%89%8b%e8%b5%b0%e5%90%91",
+    "163.com/dy/article/l94ka7rk0531b06v.html",
+    "baijiahao.baidu.com/s",
+    "pai.com.cn/p/01jx997a938d6jqr69vcnda1e6",
+    "readhub.cn/topic/8k0godhywkn",
+    "doi.org/10.1080/22243534.2026.2726013",
+    "doi.org/10.32920/25266955",
+    "doi.org/10.1145/3788879",
+    "doi.org/10.3390/iot7010005",
+    "doi.org/10.1016/j.caeai.2026.100653",
+    "doi.org/10.4324/9781003534006",
+    "openalex.org/w7133585207",
+    "doi.org/10.32996/jcsts.2026.8.10.3",
+    "doi.org/10.62311/nesx/rb42ag-978-81-68314-58-0",
+    "doi.org/10.48550/arxiv.2608.26626",
+    "doi.org/10.1016/j.rineng.2026.113300",
+    "doi.org/10.24108/preprints-3115683",
+    "doi.org/10.3390/soc16020058",
+    "doi.org/10.24136/oc.4214",
+    "doi.org/10.3390/admsci16030113",
+    "doi.org/10.36948/ijfmr.2026.v08i05.88518",
+    "doi.org/10.1016/j.jbusres.2026.116580",
+    "doi.org/10.4236/ajibm.2026.168047",
+    "doi.org/10.55214/2576-8484.v10i5.12854",
+    "doi.org/10.61424/gxscyq09",
+    "hotel-technology-conference.worldbigroup.com/blogs/eu-ai-act-hotel-technology-compliance",
+    "hospitalityos.tech/research/eu-ai-act-hotels-compliance",
+    "hotel-tech.ai/ai-in-hospitality-industry",
+    "idsnext.com/blogs/the-eu-ai-act-and-the-future-of-hospitality-in-the-age-of-intelligence",
+    "blog.csdn.net/2509_93962717/article/details/161893318",
+    "cnblogs.com/hcwl2025/p/20553665",
+    "finance.sina.com.cn/tech/roll/2026-10-28/doc-iniwttsa6690597.shtml",
+    "blog.csdn.net/2609_96044918/article/details/161478833",
+    "file2.foodmate.net/wenku2025/wj2025040700901.pdf",
+    "hoteltechreport.com/news/what-is-hotel-pms",
+    "csjcs.com/news/shangxun/article-jlwfjc-755199.html",
+    "yun88.com/product/11113.html",
+    "sohu.com/a/992916763_121218361",
+    "news.cn/globe/20260908/2b8ba615a21c4084aa31757cb273ecb5/c.html",
+    "huxiu.com/article/4865819.html",
+    "m.traveldaily.cn/article/186189",
+    "en.wikipedia.org/wiki/india_ai_impact_summit_2026",
+    "jiudianguancha.com/4/35555/2220473",
+    "ctha.com.cn/detail-2-59-3858.html",
+    "hospitalitynet.org/opinion/4135075/the-human-in-the-loop-hotel-where-ai-should-decide-recommend-and-stop",
+    "hospitalitynet.org/article/122000515/10-agentic-ai-trends-that-will-redefine-hotel-operations-in-2026",
+    "arxiv.org/pdf/2608.14611",
+    "arxiv.org/pdf/2602.03603",
+    "frenchydigital.com/blog/top-ai-agents-hotels-2026",
+    "hotelyearbook.com/article/122000515/10-agentic-ai-trends-that-will-redefine-hotel-operations-in-2026",
+    "arxiv.org/pdf/2504.19678"
+  ],
+  "evidence": [
+    {
+      "id": "E1",
+      "tool": "search_web",
+      "query": "酒店 AI 应用 2026 收益管理 智能体"
+    },
+    {
+      "id": "E2",
+      "tool": "search_web",
+      "query": "hotel AI adoption 2026 survey revenue management agents"
+    },
+    {
+      "id": "E3",
+      "tool": "search_scholar",
+      "query": "hotel revenue management machine learning demand forecasting"
+    },
+    {
+      "id": "E4",
+      "tool": "search_scholar",
+      "query": "large language model hotel operations guest service agent"
+    },
+    {
+      "id": "E5",
+      "tool": "fetch_page",
+      "query": "https://roompricegenie.com/hotel-revenue-management-2026-survey-findings/"
+    },
+    {
+      "id": "E6",
+      "tool": "fetch_page",
+      "query": "https://stateofhotelai.com/"
+    },
+    {
+      "id": "E7",
+      "tool": "fetch_page",
+      "query": "https://www.mews.com/en/blog/what-does-ai-ready-actually-mean-for-your-hotel-in-2026"
+    },
+    {
+      "id": "E8",
+      "tool": "search_web",
+      "query": "IDeaS Duetto AI revenue management hotel case study RevPAR uplift percent"
+    },
+    {
+      "id": "E9",
+      "tool": "search_web",
+      "query": "hotel AI agent guest messaging case study direct bookings uplift 2026"
+    },
+    {
+      "id": "E10",
+      "tool": "search_web",
+      "query": "云迹科技 酒店机器人 2026 招股书 酒店 部署 数量"
+    },
+    {
+      "id": "E11",
+      "tool": "search_web",
+      "query": "Marriott Hilton Hyatt AI agent 2026 deployment results"
+    },
+    {
+      "id": "E12",
+      "tool": "fetch_page",
+      "query": "https://skift.com/2026/10/02/hilton-isnt-blocking-new-ai-agents-but-its-not-always-letting-them-in/"
+    },
+    {
+      "id": "E13",
+      "tool": "fetch_page",
+      "query": "https://www.guandian.cn/m/show/614124"
+    },
+    {
+      "id": "E14",
+      "tool": "search_web",
+      "query": "华住 首旅如家 锦江 AI 智能体 2026 落地 效率 提升"
+    },
+    {
+      "id": "E15",
+      "tool": "search_web",
+      "query": "Duetto IDeaS case study RevPAR increase percent hotel revenue management AI results"
+    },
+    {
+      "id": "E16",
+      "tool": "search_web",
+      "query": "hotel housekeeping staff scheduling AI optimization labor productivity case study"
+    },
+    {
+      "id": "E17",
+      "tool": "search_scholar",
+      "query": "dynamic pricing hotel algorithmic pricing field experiment revenue"
+    },
+    {
+      "id": "E18",
+      "tool": "fetch_page",
+      "query": "https://finance.sina.com.cn/stock/estate/integration/2026-03-02/doc-inhpqknr1450854.shtml"
+    },
+    {
+      "id": "E19",
+      "tool": "fetch_page",
+      "query": "https://xueqiu.com/S/01179/392659106"
+    },
+    {
+      "id": "E20",
+      "tool": "fetch_page",
+      "query": "https://finance.sina.com.cn/wm/2026-05-29/doc-inhzqimi9426295.shtml"
+    },
+    {
+      "id": "E21",
+      "tool": "fetch_page",
+      "query": "https://www.duettocloud.com/en-us/success-stories/duetto-drives-28-increase-in-revpar-for-rimc-hotels-resorts-group"
+    },
+    {
+      "id": "E22",
+      "tool": "search_web",
+      "query": "hotel algorithmic pricing antitrust lawsuit class action 2026 casino hotels"
+    },
+    {
+      "id": "E23",
+      "tool": "search_web",
+      "query": "华住 腾讯云 AI住中服务 智能体 10000家门店 上线"
+    },
+    {
+      "id": "E24",
+      "tool": "search_web",
+      "query": "石基信息 2026年中国酒店业数字化转型趋势报告 成熟度指数"
+    },
+    {
+      "id": "E25",
+      "tool": "search_web",
+      "query": "酒店 人力成本 占比 用工短缺 2026 中国 饭店协会 报告"
+    },
+    {
+      "id": "E26",
+      "tool": "fetch_page",
+      "query": "https://www.jjckb.cn/20260603/24b0598f265646ec8d09d5f351682b45/c.html"
+    },
+    {
+      "id": "E27",
+      "tool": "fetch_page",
+      "query": "https://www.cov.com/en/news-and-insights/insights/2026/08/third-circuit-reinstates-algorithmic-pricing-antitrust-lawsuit-cornish-adebiyi-v-caesars-entertainment-inc"
+    },
+    {
+      "id": "E28",
+      "tool": "fetch_page",
+      "query": "https://www.jtepms.cn/post/230.html"
+    },
+    {
+      "id": "E29",
+      "tool": "search_scholar",
+      "query": "agentic AI travel booking LLM agent hotel distribution 2026"
+    },
+    {
+      "id": "E30",
+      "tool": "search_scholar",
+      "query": "generative AI hospitality employee work design productivity field experiment"
+    },
+    {
+      "id": "E31",
+      "tool": "search_web",
+      "query": "EU AI Act hotel hospitality compliance 2026 obligations"
+    },
+    {
+      "id": "E32",
+      "tool": "search_web",
+      "query": "hotel revenue manager role change AI 2026 job title analyst"
+    },
+    {
+      "id": "E33",
+      "tool": "fetch_page",
+      "query": "https://otelciro.com/en/news/hotel-ai-adoption-82-percent-2026"
+    },
+    {
+      "id": "E34",
+      "tool": "fetch_page",
+      "query": "https://www.teacode.io/blog/ai-in-hospitality-guest-experience"
+    },
+    {
+      "id": "E35",
+      "tool": "fetch_page",
+      "query": "https://finance.sina.com.cn/tech/roll/2026-09-01/doc-iniqhfqh4800773.shtml"
+    },
+    {
+      "id": "E36",
+      "tool": "fetch_page",
+      "query": "https://finance.sina.com.cn/jjxw/2026-01-16/doc-inhhnqpa0767665.shtml"
+    },
+    {
+      "id": "E37",
+      "tool": "search_web",
+      "query": "Google AI Mode hotel booking Marriott IHG Wyndham Choice agentic 2026"
+    },
+    {
+      "id": "E38",
+      "tool": "search_web",
+      "query": "hotel labor shortage 2026 statistics staffing vacancies AHLA"
+    },
+    {
+      "id": "E39",
+      "tool": "search_web",
+      "query": "IDeaS revenue management case study hotel group results 2026"
+    },
+    {
+      "id": "E40",
+      "tool": "search_web",
+      "query": "酒店 数字店长 AI 店长 2026 美团 既白 订单来了"
+    },
+    {
+      "id": "E41",
+      "tool": "fetch_page",
+      "query": "https://skift.com/2026/08/27/googles-agentic-hotel-booking-tool-comes-to-ai-mode/"
+    },
+    {
+      "id": "E42",
+      "tool": "fetch_page",
+      "query": "https://www.163.com/dy/article/L82GGFMB0519U3I5.html"
+    },
+    {
+      "id": "E43",
+      "tool": "fetch_page",
+      "query": "https://www.ahla.com/news/rising-cost-staffing-challenges-persist-hotels-travel-demand-expected-hold-steady"
+    },
+    {
+      "id": "E44",
+      "tool": "fetch_page",
+      "query": "https://ideas.com/client-success/"
+    },
+    {
+      "id": "E45",
+      "tool": "search_scholar",
+      "query": "hotel AI revenue management independent third-party validation RevPAR controlled study 2026"
+    },
+    {
+      "id": "E46",
+      "tool": "search_scholar",
+      "query": "hotel AI agent human-in-the-loop autonomy level failure recovery audit trail case study"
+    },
+    {
+      "id": "E47",
+      "tool": "search_scholar",
+      "query": "hotel AI deployment organization redesign roles skills workforce case study 2026"
+    },
+    {
+      "id": "E48",
+      "tool": "search_web",
+      "query": "EU AI Act hospitality hotel compliance obligations high-risk transparency 2026 official"
+    },
+    {
+      "id": "E49",
+      "tool": "fetch_page",
+      "query": "https://compound.law/en-DE/ai-act/hospitality/"
+    },
+    {
+      "id": "E50",
+      "tool": "fetch_page",
+      "query": "https://www.hijiffy.com/resources/articles/eu-ai-act"
+    },
+    {
+      "id": "E51",
+      "tool": "search_scholar",
+      "query": "hotel AI ROI cost per task labor cost reduction PoC pilot scale gate 2026 case study"
+    },
+    {
+      "id": "E52",
+      "tool": "search_web",
+      "query": "酒店 PMS CRS 收益管理系统 前台 客房 餐饮 工作流 Artifact 交接 2026"
+    },
+    {
+      "id": "E53",
+      "tool": "search_web",
+      "query": "酒店 AI 组织架构 岗位重构 收益经理 前台 客房 技能 转型 案例 2026"
+    },
+    {
+      "id": "E54",
+      "tool": "search_web",
+      "query": "hotel AI agent autonomy level human-in-the-loop failure recovery audit trail production deployment 2026"
+    },
+    {
+      "id": "E55",
+      "tool": "fetch_page",
+      "query": "https://assistents.ai/blogs/agentic-ai-in-hospitality-industry-2026"
+    },
+    {
+      "id": "E56",
+      "tool": "fetch_page",
+      "query": "https://www.sohu.com/a/992916763_121218361"
+    },
+    {
+      "id": "E57",
+      "tool": "fetch_page",
+      "query": "http://www.news.cn/globe/20260908/2b8ba615a21c4084aa31757cb273ecb5/c.html"
+    }
+  ],
+  "citations": {
+    "style": "numbered",
+    "markers": 27,
+    "refs": 56,
+    "total": 56,
+    "verified": 56,
+    "unmatched": [],
+    "danglingMarkers": [],
+    "unusedRefs": [
+      "1",
+      "2",
+      "8",
+      "9",
+      "10",
+      "11",
+      "14",
+      "15",
+      "16",
+      "19",
+      "22",
+      "23",
+      "24",
+      "25",
+      "29",
+      "31",
+      "32",
+      "33",
+      "36",
+      "37",
+      "38",
+      "39",
+      "45",
+      "48",
+      "51",
+      "52",
+      "53",
+      "54",
+      "55"
+    ],
+    "bareUrlsInBody": 0,
+    "rate": 1
+  },
+  "evidenceEval": {
+    "sufficient": false,
+    "score": 62,
+    "coverage": {
+      "Chapter1 核心判断": "薄弱",
+      "Chapter2 业务流程与AI能力": "充分",
+      "Chapter3 高价值场景": "充分",
+      "Chapter4 学术与行业进展": "充分",
+      "Chapter5 产品案例与实证": "薄弱",
+      "Chapter6 人的工作方式与组织分工": "薄弱",
+      "Chapter7 监管法规标准与风险": "充分",
+      "Chapter8 自主边界与人工接管": "薄弱",
+      "Chapter9 KPI经济性与落地": "缺失",
+      "三线研究覆盖": "薄弱"
+    },
+    "gaps": [
+      "Chapter 9 的 ROI/Economics/PoC/Scale Gate 专项证据几乎为零（对应学术检索返回 0 篇），无法支撑“值不值、怎么落地”的量化论证",
+      "Chapter 5 的量化 KPI 多为厂商披露（Duetto 28% RevPAR、华住/锦江/美团案例），缺乏独立第三方或受控实验验证（独立验证检索仅 2 篇），Evidence Ladder 难以升到 E4/E5",
+      "Chapter 8 自主边界缺少可落地的 L0–L5 分级、Failure Detection、错误可恢复性与升级条件的生产级证据，现有仅为泛化的 human-in-the-loop 讨论",
+      "Chapter 6 组织分工与岗位重构多为趋势性报道，缺少实名企业“AI 介入前后 Role/Skill/团队结构变化”的可核验案例"
+    ],
+    "extra_queries": [
+      "hotel AI revenue management ROI cost per reservation payback period independent audit 2026",
+      "hotel AI pilot to scale gate production deployment KPI before after controlled comparison 2026",
+      "hotel AI agent autonomy level L0-L5 human override failure recovery production case study 2026",
+      "酒店 AI 落地 前后对比 人房比 人力成本 岗位重构 实名案例 2026"
+    ],
+    "reason": "主流程、场景、学术/行业进展与监管证据较充分，但 Chapter 9 经济性与落地证据近乎缺失、Chapter 5 量化结果多为厂商口径缺独立验证、Chapter 8 自主分级与 Chapter 6 组织重构证据薄弱，尚不足以支撑技能要求的完整章节与关键结论。",
+    "usage": {
+      "input": 9642,
+      "output": 1510,
+      "reasoning": 0,
+      "cached": 0
+    }
+  },
+  "reportEval": {
+    "verdict": "revise",
+    "score": 78,
+    "dimensions": {
+      "结构完整性": 92,
+      "证据充分性": 80,
+      "判断质量": 85,
+      "引用规范": 55,
+      "写作质量": 82
+    },
+    "blocking_issues": [
+      "参考来源清单存在大量正文未引用的编号（[1][2][8][9][10][11][14][15][16][19][22][23][24][25][29][31][32][33][36][37][38][39][45][48][51][52][53][54][55]），违反 citation_format.md『清单里不要有正文没引用的编号』纪律",
+      "同一来源被分配多个编号：[10]/[13]（云迹）、[23]/[26]（经济参考网华住）、[37]/[41]（Skift Google）、[38]/[43]（AHLA）、[39]/[44]（IDeaS）、[31]/[49]（compound.law）、[48]/[50]（hijiffy）、[51]/[55]（assistents.ai），违反『同一来源全文复用同一编号』",
+      "[28] 为 PMS 厂商博客（jtepms.cn）内容营销，其『人工成本率 34.48%、人房比 0.63、人均创收 30.25 万元』被当作行业基准使用，未按 evidence_freshness.md 标注为厂商披露/C 级，存在把营销口径当行业事实的风险",
+      "判断 2（收益管理信任赤字）与判断 6（经济性局部可证）在『信任/回本』语义上存在部分重叠，需在 Chapter 1 明确区分二者边界（前者是决策信任，后者是投资回收）"
+    ],
+    "suggestions": [
+      "清理参考来源清单，删除未引用编号，合并重复 URL，确保正文编号与清单一一对应",
+      "对 [28] 等厂商来源的行业基准数字补充口径说明或替换为 A/B 级来源",
+      "Chapter 4 与 Chapter 5 中『Google AI Mode 上线』『华住万店』等事实出现重复叙述，可压缩 Chapter 4 的案例细节，只保留趋势判断",
+      "Chapter 6 中『AI 数字店长』『60% 重复工作』等预判性内容与 Chapter 1 判断 5 的『趋势判断』定位一致，但建议在正文明确标注为『高管预判/行业观察』而非已验证事实"
+    ],
+    "reason": "章节骨架、判断架构与证据阶梯基本符合 v1.5.0，但引用编号体系存在系统性违规（冗余编号+未引用编号+厂商口径未标注），需修订后方可交付。",
+    "usage": {
+      "input": 22285,
+      "output": 2114,
+      "reasoning": 0,
+      "cached": 0
+    }
+  },
+  "cost": {
+    "known": true,
+    "tokenCost": 0.13537412000000001,
+    "searchCost": 0.23,
+    "total": 0.36537412,
+    "note": "TheHive 刊例，需以官网为准"
+  },
+  "validations": [
+    {
+      "script": "validators/check_markdown_compactness.py",
+      "ok": true,
+      "status": "pass",
+      "output": "PASS: no obvious short-list density issues."
+    },
+    {
+      "script": "validators/validate_report_structure.py",
+      "ok": true,
+      "status": "pass",
+      "output": "PASS: report has the expected v1.5.0 narrative skeleton."
+    },
+    {
+      "script": "validators/validate_skill_package.py",
+      "ok": true,
+      "status": "pass",
+      "output": "PASS: v1.5.0 package structure and core contracts validated."
+    }
+  ]
+}

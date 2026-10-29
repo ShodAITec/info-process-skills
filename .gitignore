@@ -1,0 +1,21 @@
+# 密钥：绝不提交
+config.md
+.env
+*.key
+
+# 依赖与产物
+node_modules/
+output/
+
+# 系统文件
+.DS_Store
+*.log
+
+# examples/ 是手工挑选的示例产出，需要提交
+!examples/
+
+# 内部发布工具：仅本地使用，不开源
+publishers/
+
+# 公开版镜像由 scripts/build-public.sh 生成
+publish/

@@ -1,0 +1,626 @@
+{
+  "skill": {
+    "id": "tech-selection",
+    "name": "tech-selection",
+    "version": "0.1.0"
+  },
+  "task": "RAG 向量检索选型：Pinecone vs Qdrant vs pgvector，5 人团队，千万级向量",
+  "generatedAt": "2026-10-29T07:30:30.483Z",
+  "provider": {
+    "label": "TheHive · DeepSeek",
+    "model": "deepseek-ai/deepseek-v4.1-flash-1017"
+  },
+  "durationMs": 230556,
+  "usage": {
+    "input": 267580,
+    "output": 18477,
+    "reasoning": 3042,
+    "cached": 119040,
+    "calls": 17
+  },
+  "researchRounds": 12,
+  "sources": [
+    "blog.ncse.tw/pgvectorscale-diskann-postgres-vector-search-pinecone-alternative",
+    "juejin.cn/post/7631022614798942262",
+    "cnblogs.com/12lisu/p/19891059",
+    "aicoding.csdn.net/6a5df1c810ee7a33f28f84d5.html",
+    "blog.csdn.net/gitblog_00353/article/details/157851343",
+    "walterwang0x01.github.io/portfolio/posts/vector-database-selection",
+    "imydb.com/article/2026/5/29/59.html",
+    "lidayun.com/article/app-vectordb",
+    "cloud.google.com/discover/what-is-pgvector",
+    "tigerdata.com/blog/pgvector-vs-qdrant",
+    "dev.to/fabwaseem/pgvector-vs-pinecone-vs-qdrant-benchmarked-for-rag-in-2026-56e4",
+    "firecrawl.dev/blog/best-vector-databases",
+    "letsdatascience.com/blog/vector-databases-compared-pinecone-qdrant-weaviate-milvus-and-more",
+    "dev.to/kencho/vector-database-performance-compared-pgvector-vs-pinecone-vs-qdrant-vs-weaviate-2ne6",
+    "buildmvpfast.com/blog/pgvector-vs-pinecone-qdrant-postgres-vector-database-ai-app-2026",
+    "cloudmagazin.com/en/2026/04/02/vector-databases-rag-pinecone-weaviate-qdrant-pgvector-comparison",
+    "locionic.com/en/blog/vector-databases-rag",
+    "mashop.app/blog/vector-database-comparison-pgvector-pinecone-qdrant",
+    "alternatives.co/software/qdrant/pricing",
+    "softwaresuggest.com/qdrant/pricing",
+    "cloud.qdrant.io/calculator",
+    "ranksquire.com/2026/03/04/vector-database-pricing-comparison-2026",
+    "francisokafor.com/tools/qdrant",
+    "usagepricing.com/blueprint/qdrant",
+    "markaicode.com/pricing/pinecone-vs-qdrant-pricing",
+    "markaicode.com/pricing/qdrant-vs-weaviate-pricing",
+    "leanopstech.com/blog/qdrant-cloud-pricing-2026",
+    "spendark.com/blog/vector-database-pricing",
+    "theaimarketpulse.com/tools/pinecone",
+    "rahulkolekar.com/vector-db-pricing-comparison-pinecone-weaviate-2026",
+    "aipromptshub.co/calc/vector-db-cost-per-1m-embeddings",
+    "omidsaffari.com/blog/pinecone-pricing",
+    "leanopstech.com/blog/pinecone-pricing-2026",
+    "pecollective.com/tools/pinecone",
+    "pecollective.com/tools/pinecone-pricing",
+    "qdrant.tech/pricing",
+    "pinecone.io/pricing",
+    "github.com/pgvector/pgvector",
+    "zilliz.com/blog/vdbbench-1-0-benchmarking-with-your-real-world-production-workloads",
+    "zilliz.com/vdbbench-leaderboard",
+    "github.com/benchant/vectordbbench",
+    "zilliz.com/blog/vdbbench-adds-cost-aware-benchmarking-for-vector-databases",
+    "arxiv.org/pdf/2310.11703",
+    "salttechno.ai/datasets/vector-database-performance-benchmark-2026",
+    "digitalapplied.com/blog/vector-databases-for-ai-agents-pinecone-qdrant-2026",
+    "lushbinary.com/blog/vector-database-benchmarks-production-selection-guide-2026",
+    "github.com/qdrant/qdrant/blob/master/readme.md",
+    "artifacthub.io/packages/helm/qdrant/qdrant",
+    "deepchecks.com/llm-tools/qdrant",
+    "sourceforge.net/projects/qdrant.mirror",
+    "en.wikipedia.org/wiki/list_of_formerly_open-source_or_free_software",
+    "systenics.ai/blog/2023-12-09-introduction-to-qdrant",
+    "en.wikipedia.org/wiki/kibana",
+    "en.wikipedia.org/wiki/opensearch_(software)",
+    "github.com/alexsergivan/kwant/pull/58",
+    "1bench.dev/guides/qdrant",
+    "unite.ai/pinecone-releases-pg-pinecone-an-open-source-postgres-search-extension",
+    "pinecone.io/newsroom",
+    "pinecone.io/blog/knowledge-infrastructure-for-agents",
+    "sdtimes.com/data/introducing-pg_pinecone-open-source-search-for-your-postgres-data",
+    "techzine.eu/news/applications/145341/pinecone-brings-its-own-vector-search-technology-to-postgresql",
+    "github.com/postgresapp/postgresapp/issues/883",
+    "pinecone.io/blog/introducing-pg-pinecone",
+    "tech-insider.org/ca/vector-database-comparison-pinecone-qdrant-weaviate-milvus-pgvector-2026",
+    "aicybr.com/blog/pinecone-pg-pinecone-postgres-vector-search-native-remote-guide",
+    "longisland-ny.com/2026/10/27/introducing-pg_pinecone-open-source-search-for-your-postgres-data",
+    "aws.amazon.com/blogs/database/scale-pgvector-with-binary-quantization-on-amazon-aurora-postgresql",
+    "dev.to/alanwest/pgvectorsearch-vs-pgvector-hnsw-42-hours-vs-49-minutes-heres-the-catch-2id0",
+    "dev.to/philip_mcclarence_2ef9475/scaling-pgvector-memory-quantization-and-index-build-strategies-8m2",
+    "businesstechnavigator.com/blog/pgvector-scaling-2026",
+    "arxiv.org/pdf/2603.01525",
+    "arxiv.org/pdf/2608.15994",
+    "medium.com/@khawaja.muhammad.mushood/pgvector-hnsw-index-create-it-size-it-and-build-it-fast-996f623b513a",
+    "arxiv.org/pdf/2603.23710",
+    "jacar.es/en/pgvector-in-2024-hnsw-indexes-and-real-scaling",
+    "indexical.dev/knowledge/pgvector_index_tuning_best_practices_for_production_workloads_in_2026.php",
+    "dev.co/ai/vector-databases/qdrant",
+    "meilisearch.com/docs/resources/comparisons/qdrant",
+    "agentset.ai/vector-databases/qdrant",
+    "en.wikipedia.org/wiki/apache_qpid",
+    "opentechhub.io/qdrant",
+    "aipotluck.org/org/qdrant",
+    "promptquorum.com/power-local-llm/qdrant-review",
+    "costbench.com/software/vector-databases/qdrant",
+    "digiqt.com/tools/vector-database-sizing",
+    "checkthat.ai/brands/qdrant/pricing",
+    "ranksquire.com/2026/04/19/qdrant-cloud-pricing-2026",
+    "abacktools.com/tools/ai/calculators/vector-database-cost-calculator",
+    "raw.githubusercontent.com/qdrant/qdrant/master/license",
+    "medium.com/@dikhyantkrishnadalai/optimizing-vector-search-at-scale-lessons-from-pgvector-supabase-performance-tuning-ce4ada4ba2ed",
+    "supabase.com/modules/vector",
+    "selfhost.dev/blog/pgvector-in-production-2026-critiques-failures",
+    "kreante.co/post/build-smart-apps-with-supabase-vector-database-semantic-search-guide",
+    "baeseokjae.github.io/posts/vector-database-comparison-2026",
+    "markaicode.com/architecture/supabase-vector-database-architecture",
+    "markaicode.com/vs/supabase-vs-pgvector",
+    "markaicode.com/architecture/vector-database-architecture-with-supabase",
+    "markaicode.com/integrate/pgvector-with-supabase",
+    "qdrant.tech/documentation/overview",
+    "oneuptime.com/blog/post/2026-08-28-qdrant-shard-replication-write-consistency-settings/view",
+    "theneuralbase.com/qdrant/learn/advanced/sharding-across-nodes",
+    "pavanrangani.com/blog/qdrant-vector-database-production-deployment-guide",
+    "markaicode.com/architecture/qdrant-vector-database-architecture",
+    "markaicode.com/architecture/enterprise-vector-database-architecture",
+    "markaicode.com/architecture/qdrant-agent-architecture",
+    "markaicode.com/architecture/production-vector-database-architecture",
+    "markaicode.com/architecture/qdrant-inference-architecture",
+    "dev.to/zeropsio/our-journey-integrating-qdrant-in-zerops-4iea",
+    "statusgator.com/services/pinecone/inference",
+    "statusgator.com/services/pinecone",
+    "statusgator.com/services/pinecone/us-east-1-aws",
+    "pinecone.io/blog/march-1-2023-incident",
+    "status.pinecone.io",
+    "statusgator.com/services/pinecone/gcp-us-central1",
+    "outagedeck.com/services/pinecone-platform",
+    "pingy.io/outages/pinecone-experiencing-5xx-errors-on-control-plane-operations",
+    "pagerly.io/is-it-down/pinecone-status",
+    "panoply.io/tools/pinecone",
+    "atlan.com/know/ai-agent/data-for-ai/what-is-pinecone-vector-database",
+    "layer3labs.io/guides/is-pinecone-worth-it",
+    "usagepricing.com/blueprint/pinecone",
+    "ranksquire.com/2026/04/02/pinecone-pricing-2026",
+    "mxchat.ai/pinecone-pricing-chatbot-test",
+    "github.com/timescale/pgvectorscale",
+    "dbta.com/editorial/news-flashes/qdrant-117-supercharges-vector-search-with-a-variety-of-updates-173593.aspx",
+    "qdrant.tech/blog/qdrant-1.17.x",
+    "github.com/qdrant/qdrant/releases/tag/v1.17.1",
+    "github.com/qdrant/qdrant/releases/tag/v1.16.1",
+    "qdrant.tech/blog/qdrant-1.16.x",
+    "github.com/qdrant/qdrant/releases/tag/v1.17.0",
+    "en.wikipedia.org/wiki/apache_solr",
+    "en.wikipedia.org/wiki/android_17",
+    "airbyte.com/data-engineering-resources/postgresql-as-a-vector-database",
+    "github.com/pgvector/pgvector/blob/master/changelog.md",
+    "pecollective.com/tools/pgvector",
+    "techreviewer.com/developer-news/2025-11-04-aws-benchmarks-show-94x-faster-pgvector-queries-with-new-scans",
+    "postgresql.org/about/news/pgvector-080-released-2952",
+    "aws.amazon.com/blogs/database/supercharging-vector-search-performance-and-relevance-with-pgvector-0-8-0-on-amazon-aurora-postgresql",
+    "postgresql.org/message-id/e1t8kv4-000qek-sh%40atalia.postgresql.org",
+    "aws.amazon.com/about-aws/whats-new/2024/11/amazon-rds-for-postgresql-pgvector-080",
+    "aws.amazon.com/about-aws/whats-new/2025/04/pgvector-0-8-0-aurora-postgresql",
+    "machinelearningmastery.com/pgvector-vs-dedicated-vector-databases-a-production-benchmark",
+    "softwareseni.com/pgvector-pgvectorscale-and-the-postgres-vector-search-stack-explained",
+    "ecorpit.com/postgres-vector-search-pgvector-pgvectorscale-paradedb-lantern-2026",
+    "vecstore.app/blog/vector-database-performance-compared",
+    "datastudios.org/post/qdrant-hnsw-indexing-payload-filtering-quantization-and-vector-search-performance",
+    "docs.pinecone.io/guides/manage-cost/understanding-cost",
+    "buildmvpfast.com/tools/api-pricing-estimator/qdrant",
+    "devtune.ai/verticals/search-vector-databases/qdrant/pricing",
+    "aipromptshub.co/limits/qdrant-cloud-quotas",
+    "qdrant.tech/benchmarks",
+    "qdrant.tech/hybrid-cloud",
+    "qdrant.tech/security",
+    "medium.com/@turjachaudhuri/qdrant-vector-database-deployment-options-in-an-enterprise-context-1d206b30f69f",
+    "hybrid-cloud.qdrant.tech",
+    "tfir.io/qdrant-launches-hybrid-cloud-offering-for-enterprise-ai-applications",
+    "itechguides.com/qdrant-launches-first-vector-database-as-a-managed-hybrid-cloud",
+    "theneuralbase.com/qdrant/learn/advanced/hybrid-cloud-option",
+    "kingbase.com.cn/explore/tech-blog/2026-%e5%90%91%e9%87%8f%e6%95%b0%e6%8d%ae%e5%ba%93%e7%99%bd%e7%9a%ae%e4%b9%a6%ef%bc%9a%e6%95%b0%e6%8d%ae%e6%99%ba%e8%83%bd%e8%bd%ac%e5%9e%8b%e7%9a%84%e6%96%b0%e5%bc%95%e6%93%8e",
+    "cnblogs.com/davidwang456/p/21283627",
+    "cnblogs.com/obce666/p/19842494",
+    "blog.deptrip.com/2026/07/14/vector-database-comparison-2026",
+    "realtime-ai.chat/posts/vector-db-2026",
+    "ainomam.com/zh/post/vector-database-comparison-2026-cheatsheet",
+    "beehivestrategy.com/zh-cn/blog/articles/vector-database-selection-enterprise-guide",
+    "blog.csdn.net/m0_59163425/article/details/148619053",
+    "velodb.io/glossary/pinecone-vector-database",
+    "deeflect.medium.com/supabase-vs-pinecone-i-migrated-my-production-ai-system-and-heres-what-actually-matters-7b2f2ebd59ee",
+    "7wdata.be/tool/pinecone",
+    "hackceleration.com/labs/review/pinecone",
+    "groovyweb.co/blog/vector-database-comparison-2026",
+    "resources.rework.com/tools/ai-data-infra/best-pinecone-alternatives",
+    "tool.news/compare/elasticsearch-vs-pinecone",
+    "tokenmix.ai/blog/pinecone-to-qdrant-migration-guide-2026",
+    "dataopsleadership.substack.com/p/vendor-lock-in-scores-a-brief-summary",
+    "sukruyusufkaya.com/en/blog/vektor-veritabani-secimi-2026-pgvector-qdrant",
+    "cipherprojects.com/blog/posts/vector-database-pricing-comparison-2026",
+    "theneuralbase.com/qdrant/learn/advanced/when-self-host-wins",
+    "ranksquire.com/2026/02/27/best-self-hosted-vector-database-2026",
+    "leanopstech.com/blog/pinecone-vs-qdrant-vs-weaviate-vs-pgvector-2026",
+    "researchgate.net/publication/403505351_a_experimental_analysis_of_vector_databases_for_retrieval-augmented_generation_rag_pipelines_performance_scalability_and_use-case_suitability_submission_details",
+    "dev.to/devrudals/enterprise-vector-database-2026-qdrant-vs-milvus-vs-pgvector-vs-pinecone-16a0",
+    "particula.tech/blog/pinecone-vs-qdrant-comparison",
+    "dev.to/polliog/postgresql-as-a-vector-database-when-to-use-pgvector-vs-pinecone-vs-weaviate-4kfi",
+    "mrscraper.com/blog/best-vector-database",
+    "arxiv.org/pdf/2411.02814",
+    "arxiv.org/pdf/2512.17264",
+    "supabase.com/blog/pgvector-fast-builds",
+    "thebuild.com/blog/on-pgvectorscale-and-hybrid-search-without-an-elasticsearch-sidecar",
+    "ssdnodes.com/learn/pgvector-hnsw-index-on-a-small-vps",
+    "particula.tech/blog/pgvector-hnsw-tuning-millions-rows-production",
+    "dbadataverse.com/tech/postgresql/2025/12/pgvector-postgresql-vector-database-guide",
+    "trantorinc.com/insights/pinecone-ai-a-guide-to-the-craze-behind-vector-databases",
+    "theneuralbase.com/pinecone/learn/advanced/storage-cost-per-gb",
+    "leanopstech.com/blog/vector-database-cost-comparison-2026",
+    "markaicode.com/pricing/pgvector-vs-pinecone-pricing"
+  ],
+  "evidence": [
+    {
+      "id": "E1",
+      "tool": "search_web",
+      "query": "Pinecone pricing 2026 serverless vector database cost per million vectors"
+    },
+    {
+      "id": "E2",
+      "tool": "search_web",
+      "query": "Qdrant pricing cloud 2026 per hour cluster cost"
+    },
+    {
+      "id": "E3",
+      "tool": "search_web",
+      "query": "pgvector vs Qdrant vs Pinecone benchmark 2025 recall latency"
+    },
+    {
+      "id": "E4",
+      "tool": "search_web",
+      "query": "pgvector 千万级 向量 性能 生产 实践"
+    },
+    {
+      "id": "E5",
+      "tool": "fetch_page",
+      "query": "https://www.pinecone.io/pricing/"
+    },
+    {
+      "id": "E6",
+      "tool": "fetch_page",
+      "query": "https://qdrant.tech/pricing/"
+    },
+    {
+      "id": "E7",
+      "tool": "fetch_page",
+      "query": "https://github.com/pgvector/pgvector"
+    },
+    {
+      "id": "E8",
+      "tool": "search_web",
+      "query": "VectorDBBench Zilliz independent benchmark Qdrant pgvector Pinecone results"
+    },
+    {
+      "id": "E9",
+      "tool": "fetch_page",
+      "query": "https://leanopstech.com/blog/pinecone-pricing-2026/"
+    },
+    {
+      "id": "E10",
+      "tool": "fetch_page",
+      "query": "https://www.tigerdata.com/blog/pgvector-vs-qdrant"
+    },
+    {
+      "id": "E11",
+      "tool": "fetch_page",
+      "query": "https://zilliz.com/vdbbench-leaderboard"
+    },
+    {
+      "id": "E12",
+      "tool": "search_web",
+      "query": "Qdrant license Apache 2.0 change BSL SSPL history"
+    },
+    {
+      "id": "E13",
+      "tool": "fetch_page",
+      "query": "https://github.com/qdrant/qdrant/blob/master/README.md"
+    },
+    {
+      "id": "E14",
+      "tool": "fetch_page",
+      "query": "https://blog.ncse.tw/pgvectorscale-diskann-postgres-vector-search-pinecone-alternative/"
+    },
+    {
+      "id": "E15",
+      "tool": "search_web",
+      "query": "pgvector HNSW 10 million vectors RAM requirement index build time maintenance_work_mem"
+    },
+    {
+      "id": "E16",
+      "tool": "search_web",
+      "query": "Pinecone pg_pinecone open source Postgres announcement 2026"
+    },
+    {
+      "id": "E17",
+      "tool": "fetch_page",
+      "query": "https://www.pinecone.io/blog/introducing-pg-pinecone/"
+    },
+    {
+      "id": "E18",
+      "tool": "fetch_page",
+      "query": "https://dev.to/philip_mcclarence_2ef9475/scaling-pgvector-memory-quantization-and-index-build-strategies-8m2"
+    },
+    {
+      "id": "E19",
+      "tool": "search_web",
+      "query": "Qdrant Cloud 10 million vectors cost per month calculator 1536 dimensions"
+    },
+    {
+      "id": "E20",
+      "tool": "search_web",
+      "query": "Qdrant Apache 2.0 license \"no license change\" open source commitment"
+    },
+    {
+      "id": "E21",
+      "tool": "fetch_page",
+      "query": "https://leanopstech.com/blog/qdrant-cloud-pricing-2026/"
+    },
+    {
+      "id": "E22",
+      "tool": "fetch_page",
+      "query": "https://ranksquire.com/2026/04/19/qdrant-cloud-pricing-2026/"
+    },
+    {
+      "id": "E23",
+      "tool": "fetch_page",
+      "query": "https://raw.githubusercontent.com/qdrant/qdrant/master/LICENSE"
+    },
+    {
+      "id": "E24",
+      "tool": "fetch_page",
+      "query": "https://omidsaffari.com/blog/pinecone-pricing"
+    },
+    {
+      "id": "E25",
+      "tool": "fetch_page",
+      "query": "https://omidsaffari.com/blog/pinecone-pricing"
+    },
+    {
+      "id": "E26",
+      "tool": "search_web",
+      "query": "Qdrant production issues operational complexity self-hosted cluster sharding replication lessons learned"
+    },
+    {
+      "id": "E27",
+      "tool": "search_web",
+      "query": "pgvector production case study 10 million vectors Notion Supabase scale"
+    },
+    {
+      "id": "E28",
+      "tool": "search_web",
+      "query": "Pinecone outage incident postmortem reliability history"
+    },
+    {
+      "id": "E29",
+      "tool": "fetch_page",
+      "query": "https://selfhost.dev/blog/pgvector-in-production-2026-critiques-failures/"
+    },
+    {
+      "id": "E30",
+      "tool": "fetch_page",
+      "query": "https://www.pinecone.io/blog/march-1-2023-incident/"
+    },
+    {
+      "id": "E31",
+      "tool": "fetch_page",
+      "query": "https://pavanrangani.com/blog/qdrant-vector-database-production-deployment-guide"
+    },
+    {
+      "id": "E32",
+      "tool": "search_web",
+      "query": "Pinecone read units write units pricing per GB storage $0.33 2026 official"
+    },
+    {
+      "id": "E33",
+      "tool": "fetch_page",
+      "query": "https://ranksquire.com/2026/04/02/pinecone-pricing-2026/"
+    },
+    {
+      "id": "E34",
+      "tool": "fetch_page",
+      "query": "https://github.com/timescale/pgvectorscale"
+    },
+    {
+      "id": "E35",
+      "tool": "search_web",
+      "query": "\"pgvector\" 0.8.0 release notes iterative index scans performance improvements 2025"
+    },
+    {
+      "id": "E36",
+      "tool": "search_web",
+      "query": "Qdrant 1.16 1.17 release query performance improvements 2026"
+    },
+    {
+      "id": "E37",
+      "tool": "fetch_page",
+      "query": "https://github.com/pgvector/pgvector/blob/master/CHANGELOG.md"
+    },
+    {
+      "id": "E38",
+      "tool": "fetch_page",
+      "query": "https://qdrant.tech/blog/qdrant-1.17.x/"
+    },
+    {
+      "id": "E39",
+      "tool": "fetch_page",
+      "query": "https://www.postgresql.org/about/news/pgvector-080-released-2952"
+    },
+    {
+      "id": "E40",
+      "tool": "search_web",
+      "query": "Timescale pgvectorscale benchmark 50 million Cohere 768 dimensions p95 latency Qdrant comparison results"
+    },
+    {
+      "id": "E41",
+      "tool": "fetch_page",
+      "query": "https://machinelearningmastery.com/pgvector-vs-dedicated-vector-databases-a-production-benchmark/"
+    },
+    {
+      "id": "E42",
+      "tool": "fetch_page",
+      "query": "https://docs.pinecone.io/guides/manage-cost/understanding-cost"
+    },
+    {
+      "id": "E43",
+      "tool": "search_web",
+      "query": "Qdrant Cloud pricing $0.078 per GB-hour standard cluster RAM"
+    },
+    {
+      "id": "E44",
+      "tool": "fetch_page",
+      "query": "https://www.tigerdata.com/blog/pgvector-vs-qdrant"
+    },
+    {
+      "id": "E45",
+      "tool": "fetch_page",
+      "query": "https://qdrant.tech/benchmarks/"
+    },
+    {
+      "id": "E46",
+      "tool": "search_web",
+      "query": "Qdrant hybrid cloud data residency on-prem enterprise 5 person team ops burden"
+    },
+    {
+      "id": "E47",
+      "tool": "search_web",
+      "query": "向量数据库 选型 2026 团队规模 运维成本 Qdrant 自建 踩坑"
+    },
+    {
+      "id": "E48",
+      "tool": "search_scholar",
+      "query": "self-hosted Qdrant cluster 5 person team monthly ops hours SRE burden case study"
+    },
+    {
+      "id": "E49",
+      "tool": "search_web",
+      "query": "Pinecone data export migration off Pinecone vendor lock-in cost effort"
+    },
+    {
+      "id": "E50",
+      "tool": "search_web",
+      "query": "Qdrant Cloud vs self-hosted breakeven point total cost 3 year TCO 10M vectors"
+    },
+    {
+      "id": "E51",
+      "tool": "search_web",
+      "query": "pgvector vs Qdrant vs Pinecone same hardware 10 million vectors 1536 dims p95 latency QPS benchmark"
+    },
+    {
+      "id": "E52",
+      "tool": "fetch_page",
+      "query": "https://dev.to/devrudals/enterprise-vector-database-2026-qdrant-vs-milvus-vs-pgvector-vs-pinecone-16a0"
+    },
+    {
+      "id": "E53",
+      "tool": "fetch_page",
+      "query": "https://www.velodb.io/glossary/pinecone-vector-database"
+    },
+    {
+      "id": "E54",
+      "tool": "fetch_page",
+      "query": "https://ranksquire.com/2026/03/04/vector-database-pricing-comparison-2026/"
+    },
+    {
+      "id": "E55",
+      "tool": "fetch_page",
+      "query": "https://sukruyusufkaya.com/en/blog/vektor-veritabani-secimi-2026-pgvector-qdrant"
+    },
+    {
+      "id": "E56",
+      "tool": "search_scholar",
+      "query": "self-hosted Qdrant 3-node cluster monthly SRE hours small team 5 engineers case study"
+    },
+    {
+      "id": "E57",
+      "tool": "search_web",
+      "query": "VectorDBBench 10M vectors 1536 dims Qdrant pgvector Pinecone p95 latency QPS same instance results"
+    },
+    {
+      "id": "E58",
+      "tool": "search_web",
+      "query": "pgvector HNSW 10 million 1536 dims index build time RAM 32 vCPU p95 latency benchmark"
+    },
+    {
+      "id": "E59",
+      "tool": "search_web",
+      "query": "Pinecone serverless actual monthly bill 10M vectors 1536 dims production cost report"
+    },
+    {
+      "id": "E60",
+      "tool": "fetch_page",
+      "query": "https://dev.to/philip_mcclarence_2ef9475/scaling-pgvector-memory-quantization-and-index-build-strategies-8m2"
+    },
+    {
+      "id": "E61",
+      "tool": "fetch_page",
+      "query": "https://dev.to/polliog/postgresql-as-a-vector-database-when-to-use-pgvector-vs-pinecone-vs-weaviate-4kfi"
+    },
+    {
+      "id": "E62",
+      "tool": "fetch_page",
+      "query": "https://www.salttechno.ai/datasets/vector-database-performance-benchmark-2026/"
+    },
+    {
+      "id": "E63",
+      "tool": "fetch_page",
+      "query": "https://www.trantorinc.com/insights/pinecone-ai-a-guide-to-the-craze-behind-vector-databases"
+    },
+    {
+      "id": "E64",
+      "tool": "fetch_page",
+      "query": "https://ranksquire.com/2026/04/02/pinecone-pricing-2026/"
+    }
+  ],
+  "citations": {
+    "style": "numbered",
+    "markers": 18,
+    "refs": 18,
+    "total": 18,
+    "verified": 18,
+    "unmatched": [],
+    "danglingMarkers": [],
+    "unusedRefs": [],
+    "bareUrlsInBody": 0,
+    "rate": 1
+  },
+  "evidenceEval": {
+    "sufficient": false,
+    "score": 66,
+    "coverage": {
+      "候选方案与官方定价": "充分",
+      "第三方与厂商基准测试（可比口径）": "薄弱",
+      "生产案例与故障复盘": "充分",
+      "许可证与商业条款变更史": "充分",
+      "TCO 直接成本（订阅/基础设施）": "充分",
+      "TCO 人力与运维成本": "缺失",
+      "锁定与迁移成本": "充分",
+      "合规与数据驻留": "薄弱",
+      "小团队（5 人）运维负担": "薄弱"
+    },
+    "gaps": [
+      "TCO 人力成本无实证：两次学术检索（自建 Qdrant 集群月均 SRE 工时、5 人团队案例）均返回 0 篇，而 tco.md 明确要求「首次集成人日/稳态运维人日/学习曲线」，5 人团队自建 vs 托管的结论正取决于此，目前只能靠估算",
+      "缺少同硬件、同数据规模（10M×1536 维）的可比性能口径：多次检索「same hardware / same instance p95 QPS」但未见确认拿到三方同条件数字，厂商自测（Qdrant、Timescale pgvectorscale）与第三方（VectorDBBench/Zilliz）分量不同，若拿不到可比口径则评分矩阵的性能维度无法成立",
+      "合规与数据驻留证据仅 1 条检索，且用户未给出硬约束（合规、预算、时间），数据驻留/审计工作量无法评估，而这会直接反转托管 vs 自建结论",
+      "pgvector 千万级的具体资源门槛（HNSW 索引构建时间、RAM 峰值、maintenance_work_mem 配置）散见于博客与厂商文章，缺少官方文档或可复现测试佐证，TCO 中基础设施成本测算依据偏弱"
+    ],
+    "extra_queries": [
+      "self-hosted Qdrant Kubernetes 3-node cluster monthly SRE hours small team production retrospective",
+      "pgvector HNSW 10M 1536 dims index build time RAM peak maintenance_work_mem official docs tuning",
+      "VectorDBBench 10M 1536 dims Qdrant pgvector Pinecone same instance p95 latency QPS results table",
+      "Pinecone Qdrant data residency GDPR SOC2 compliance audit requirements comparison"
+    ],
+    "reason": "定价、许可、故障复盘、迁移锁定证据充足，但 TCO 的人力/运维成本（5 人团队这一核心变量）与同口径可比性能数字均无实证，关键结论无法被支撑。",
+    "usage": {
+      "input": 3323,
+      "output": 1550,
+      "reasoning": 0,
+      "cached": 0
+    }
+  },
+  "reportEval": {
+    "verdict": "revise",
+    "score": 72,
+    "dimensions": {
+      "结构完整性": 92,
+      "证据充分性": 78,
+      "判断质量": 80,
+      "引用规范": 55,
+      "写作质量": 85
+    },
+    "blocking_issues": [
+      "评分矩阵表内加权总分（Pinecone 3.75 / Qdrant 4.55 / pgvector 3.60）与紧随其后的计算式（3.85 / 4.45 / 3.45）自相矛盾，且表内数字算错。这是决策材料的头号结论数字，必须统一为正确值并删除『以计算式为准』这种补丁式说明。",
+      "引用编号不连续：清单为 1-9、11-16、18、19、37，缺 10、17、20-36，违反『编号从 1 开始连续』。正文出现 [22 见注]，但清单无 [22] 条目，属悬空引用。",
+      "『高并发下另有 $50–150/月容量费 [18 见注]』把 Pinecone 容量费归因到一篇讲 pgvector 内存/量化的 DEV 博客 [18]，来源与论断明显不匹配，疑为错误归因或无依据断言，须核实或删除。",
+      "『61.4GB [22 见注]』的换算本身正确（10M×1536×4B），但引用了不存在的 [22]，须改为自算并标注计算式，或补真实来源。"
+    ],
+    "suggestions": [
+      "TCO 中 Pinecone 低档 $1,168/月与反对一引用的 LeanOps $370/月（50万次/天）口径冲突，建议在正文明确两者查询量与 RU 假设的差异，避免读者误读。",
+      "第 05 节 D3 已诚实标注 Tiger Data 与 VectorDBBench 的厂商背景，建议进一步在评分表脚注写明『无 10M×1536 同口径数据，D3 分数为跨口径推断』。",
+      "参考来源可补日期与证据等级（如厂商自测/第三方/博客测算），与 citation_format 的示例一致，提升可审计性。",
+      "结论反转条件与第 06 节排序反转点内容重复，可合并或交叉引用，减少读者在两处比对的心智负担。"
+    ],
+    "reason": "结构、权重先于评分、TCO 假设、三条反对意见、许可证核查与信息缺口均达标，但评分矩阵头号数字自相矛盾且算错、引用编号不连续并出现悬空 [22] 与可疑归因，需修正后方可上会。",
+    "usage": {
+      "input": 8197,
+      "output": 2099,
+      "reasoning": 0,
+      "cached": 0
+    }
+  },
+  "cost": {
+    "known": true,
+    "tokenCost": 0.08268274,
+    "searchCost": 0.26,
+    "total": 0.34268274,
+    "note": "TheHive 刊例，需以官网为准"
+  },
+  "validations": []
+}

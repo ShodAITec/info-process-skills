@@ -1,0 +1,1424 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>酒店管理</title>
+<style>
+:root {
+  color-scheme: light;
+  --bg: #fbfaf7;
+  --surface-1: #ffffff;
+  --surface-2: #f4f2ed;
+  --surface-3: #ebe8e1;
+  --border: #e2ded4;
+  --border-strong: #cfcabd;
+  --text-primary: #16150f;
+  --text-secondary: #55524a;
+  --text-muted: #858175;
+  --accent: #b4451f;
+  --accent-soft: #fbeee7;
+  --series-1: #2a78d6;
+  --series-2: #eb6834;
+  --series-3: #1baf7a;
+  --series-4: #eda100;
+  --series-5: #e87ba4;
+  --series-6: #008300;
+  --shadow: 0 1px 2px rgba(20,18,12,.05), 0 8px 24px -12px rgba(20,18,12,.16);
+  --radius: 14px;
+  --serif: "Songti SC", "Source Han Serif SC", "Noto Serif CJK SC", "Georgia", serif;
+  --sans: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB",
+          "Microsoft YaHei", "Segoe UI", Roboto, sans-serif;
+  --mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #131311;
+    --surface-1: #1a1a19;
+    --surface-2: #212120;
+    --surface-3: #2b2b29;
+    --border: #33332f;
+    --border-strong: #4a4a45;
+    --text-primary: #f6f5f0;
+    --text-secondary: #c3c2b7;
+    --text-muted: #8e8d83;
+    --accent: #f0805a;
+    --accent-soft: #2a1a13;
+    --series-1: #3987e5;
+    --series-2: #d95926;
+    --series-3: #199e70;
+    --series-4: #c98500;
+    --series-5: #d55181;
+    --series-6: #008300;
+    --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 28px -14px rgba(0,0,0,.7);
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #131311;
+  --surface-1: #1a1a19;
+  --surface-2: #212120;
+  --surface-3: #2b2b29;
+  --border: #33332f;
+  --border-strong: #4a4a45;
+  --text-primary: #f6f5f0;
+  --text-secondary: #c3c2b7;
+  --text-muted: #8e8d83;
+  --accent: #f0805a;
+  --accent-soft: #2a1a13;
+  --series-1: #3987e5;
+  --series-2: #d95926;
+  --series-3: #199e70;
+  --series-4: #c98500;
+  --series-5: #d55181;
+  --series-6: #008300;
+  --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 28px -14px rgba(0,0,0,.7);
+}
+
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text-primary);
+  font-family: var(--sans);
+  font-size: 17px;
+  line-height: 1.5;
+  overflow-x: hidden;
+}
+a { color: inherit; }
+img { max-width: 100%; height: auto; display: block; }
+h1, h2, h3 { line-height: 1.25; margin: 0; font-weight: 700; letter-spacing: -.01em; }
+
+/* 阅读进度条 */
+.progress {
+  position: fixed; inset: 0 auto auto 0; height: 3px; width: 100%;
+  transform: scaleX(0); transform-origin: 0 50%;
+  background: var(--accent); z-index: 60; will-change: transform;
+}
+
+/* 顶栏 */
+.topbar {
+  position: sticky; top: 0; z-index: 50;
+  display: flex; align-items: center; gap: 16px;
+  padding: 10px max(20px, calc(50vw - 560px));
+  background: color-mix(in srgb, var(--bg) 88%, transparent);
+  backdrop-filter: saturate(1.6) blur(12px);
+  border-bottom: 1px solid var(--border);
+  font-size: 13px; color: var(--text-secondary);
+}
+.topbar .brand { font-weight: 700; color: var(--text-primary); letter-spacing: .02em; }
+.topbar .spacer { flex: 1; }
+.topbar a { text-decoration: none; }
+.topbar a:hover { color: var(--accent); }
+.theme-toggle {
+  border: 1px solid var(--border); background: var(--surface-1); color: var(--text-secondary);
+  border-radius: 999px; padding: 4px 12px; font: inherit; font-size: 12px; cursor: pointer;
+}
+.theme-toggle:hover { border-color: var(--border-strong); color: var(--text-primary); }
+
+.wrap { max-width: 1120px; margin: 0 auto; padding: 0 20px 96px; }
+.col { max-width: 720px; margin: 0 auto; }
+
+/* 逐段淡入 */
+.reveal { opacity: 0; transform: translateY(14px); transition: opacity .6s ease, transform .6s cubic-bezier(.2,.7,.3,1); }
+.reveal.in { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) {
+  .reveal { opacity: 1; transform: none; transition: none; }
+  html { scroll-behavior: auto; }
+}
+
+.tag {
+  display: inline-block; padding: 3px 10px; border-radius: 999px;
+  background: var(--surface-2); border: 1px solid var(--border);
+  font-size: 12px; color: var(--text-secondary); letter-spacing: .02em;
+}
+.tag.accent { background: var(--accent-soft); border-color: color-mix(in srgb, var(--accent) 30%, transparent); color: var(--accent); }
+
+footer.site {
+  border-top: 1px solid var(--border); margin-top: 64px; padding-top: 24px;
+  font-size: 13px; color: var(--text-muted); line-height: 1.7;
+}
+
+.doc { max-width: 1060px; margin: 0 auto; padding: 0 24px 100px; }
+.doc-head { padding: 52px 0 26px; border-bottom: 2px solid var(--text-primary); margin-bottom: 34px; }
+.doc-head .eyebrow { font-family: var(--mono); font-size: 11.5px; letter-spacing: .16em;
+  text-transform: uppercase; color: var(--accent); margin-bottom: 16px; }
+.doc-head h1 { font-family: var(--serif); font-size: clamp(26px, 4.6vw, 40px); line-height: 1.18;
+  margin: 0 0 14px; letter-spacing: -.01em; text-wrap: balance; }
+.doc-head .meta { display: flex; flex-wrap: wrap; gap: 7px 20px; font-size: 12.5px;
+  color: var(--text-muted); font-variant-numeric: tabular-nums; }
+
+.layout { display: grid; grid-template-columns: minmax(0,1fr); gap: 40px; align-items: start; }
+@media (min-width: 1080px) { .layout { grid-template-columns: minmax(0,1fr) 210px; } .toc { position: sticky; top: 74px; } }
+.toc { font-size: 12.5px; line-height: 1.6; max-height: calc(100vh - 100px); overflow-y: auto; }
+.toc h4 { font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--text-muted); margin: 0 0 10px; }
+.toc a { display: block; padding: 4px 0 4px 11px; color: var(--text-muted); text-decoration: none;
+  border-left: 2px solid var(--border); transition: color .18s, border-color .18s; }
+.toc a:hover, .toc a.active { color: var(--text-primary); border-left-color: var(--accent); }
+.toc a.lv3 { padding-left: 22px; font-size: 12px; }
+
+.md h1 { font-family: var(--serif); font-size: clamp(21px,3.2vw,27px); margin: 44px 0 14px;
+  padding-bottom: 9px; border-bottom: 1px solid var(--border); scroll-margin-top: 74px; }
+.md h1:first-child { margin-top: 0; }
+.md h2 { font-family: var(--serif); font-size: 19px; margin: 30px 0 11px; scroll-margin-top: 74px; }
+.md h3 { font-size: 16px; margin: 22px 0 8px; scroll-margin-top: 74px; }
+.md h4 { font-size: 14.5px; margin: 18px 0 7px; color: var(--text-secondary); }
+.md p { font-size: 15.5px; line-height: 1.85; margin: 0 0 14px; }
+.md ul, .md ol { margin: 0 0 14px; padding-left: 22px; }
+.md li { margin-bottom: 6px; line-height: 1.78; font-size: 15px; }
+.md li::marker { color: var(--text-muted); }
+.md blockquote { border-left: 3px solid var(--accent); background: var(--surface-1);
+  margin: 0 0 16px; padding: 12px 18px; border-radius: 0 var(--radius) var(--radius) 0; }
+.md blockquote p { margin: 0 0 7px; font-size: 14.5px; color: var(--text-secondary); }
+.md blockquote p:last-child { margin: 0; }
+.md code { font-family: var(--mono); font-size: .87em; background: var(--surface-2);
+  border: 1px solid var(--border); padding: .08em .34em; border-radius: 3px; word-break: break-word; }
+.md pre { background: var(--surface-1); border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 14px 16px; overflow-x: auto; margin: 0 0 16px; box-shadow: var(--shadow); }
+.md pre code { background: none; border: 0; padding: 0; font-size: 12.8px; line-height: 1.65; white-space: pre; }
+.md table { width: 100%; border-collapse: collapse; font-size: 13.5px; margin: 0; }
+/* 多列表格宁可横向滚动，也不要把单元格挤成竖排单字 */
+.md table { min-width: max-content; }
+.md th, .md td { min-width: 6.5em; }
+.md .tablewrap { overflow-x: auto; margin: 0 0 16px; border: 1px solid var(--border);
+  border-radius: var(--radius); background: var(--surface-1); }
+.md th, .md td { text-align: left; padding: 8px 13px; border-bottom: 1px solid var(--border);
+  vertical-align: top; overflow-wrap: break-word; }
+.md thead th { font-family: var(--mono); font-size: 10.5px; letter-spacing: .07em; text-transform: uppercase;
+  color: var(--text-muted); font-weight: 400; background: var(--surface-2); }
+.md tbody tr:last-child td { border-bottom: 0; }
+.md a { color: var(--accent); text-underline-offset: 2px; word-break: break-word; }
+.md hr { border: 0; border-top: 1px solid var(--border); margin: 30px 0; }
+/* 编号引用：正文上标 + 文末清单锚点 */
+.md .refmark { font-size: .72em; line-height: 0; vertical-align: super; margin: 0 .5px; }
+.md .refmark a { color: var(--accent); text-decoration: none; padding: 0 1px; font-variant-numeric: tabular-nums; }
+.md .refmark a:hover { text-decoration: underline; }
+.md .refmark a:target, .md a.refback:target { background: var(--accent-soft); border-radius: 3px; }
+.md a.refback { color: var(--accent); text-decoration: none; font-variant-numeric: tabular-nums;
+  font-family: var(--mono); font-size: .92em; }
+.md a.refback:hover { text-decoration: underline; }
+.md img { max-width: 100%; height: auto; border-radius: var(--radius); border: 1px solid var(--border); }
+
+.runinfo { margin-top: 56px; padding: 18px 22px; border: 1px dashed var(--border-strong);
+  border-radius: var(--radius); font-size: 12.5px; line-height: 1.75; color: var(--text-muted); }
+.runinfo b { color: var(--text-secondary); }
+.runinfo details { margin-top: 9px; }
+.runinfo summary { cursor: pointer; color: var(--accent); }
+.runinfo ol { margin: 9px 0 0; padding-left: 20px; max-height: 240px; overflow-y: auto; }
+.runinfo li { word-break: break-all; margin-bottom: 3px; }
+</style>
+</head>
+<body>
+<div class="progress"></div>
+<header class="topbar">
+  <span class="brand">InfoProcessSkills</span>
+  <span>ai-industry-deep-insight</span>
+  <span class="spacer"></span>
+  <button class="theme-toggle" data-theme-toggle type="button">明/暗</button>
+</header>
+
+<div class="doc">
+  <header class="doc-head">
+    <div class="eyebrow">ai-industry-deep-insight · v1.5.0</div>
+    <h1>酒店管理</h1>
+    <div class="meta">
+      <span>生成于 2026/10/29 03:39:09</span>
+      <span>模型 TheHive · DeepSeek</span>
+      <span>来源 269 个</span>
+      <span>检索 12 轮</span>
+    </div>
+  </header>
+
+  <div class="layout">
+    <main class="md"><h1 id="h-0-酒店管理-ai-行业深度洞察">酒店管理：AI × 行业深度洞察</h1>
+<blockquote>
+<p><strong>研究截止</strong>：2026-10-29（北京时间）
+<strong>执行技能</strong>：AI Industry Deep Insight Skill v1.5.0
+<strong>研究对象</strong>：全球酒店业（以中、美、欧市场为主，覆盖连锁集团、单体酒店、OTA与酒店科技供应商）
+<strong>Strategic Question</strong>：AI 对酒店管理真正改变的是什么——是前台/客房的单点效率，还是收益管理、住中服务、组织分工与分销入口的结构性重构？哪些改变已有生产级证据，哪些仍停留在试点与厂商叙事？
+<strong>证据原则</strong>：仅使用调研阶段取得的材料；厂商披露与独立证据分开标注；Benchmark ≠ Production，Production ≠ Organization ROI。</p>
+</blockquote>
+<h1 id="h-1-导读-先给结论-再逐层证明">导读：先给结论，再逐层证明</h1>
+<p>叙事：核心判断 → 业务流程与 AI 能力 → 高价值场景 → 学术/行业进展 → 产品/案例/实证 → 人与组织 → 监管/标准/风险 → 自主边界 → KPI/落地 → Final。</p>
+<p>一句话结论：<strong>酒店业的 AI 价值已经不在&quot;能不能回答&quot;，而在&quot;能不能进入 PMS/CRS/工单系统并改变 RevPAR、人房比与响应时长&quot;；但组织级 ROI 尚未兑现，行业整体卡在&quot;广泛使用、局部见效、系统割裂、信任不足&quot;的中间态。</strong></p>
+<h1 id="h-2-01-核心判断-ai-到底改变了什么">01 核心判断：AI 到底改变了什么</h1>
+<p><strong>判断 1｜AI 在酒店业的第一价值是&quot;把重复性住中服务从人手里拿走&quot;，而非替代判断。</strong>
+机制：以工作流编排 + 意图识别 + PMS/工单系统打通，将送物、续住、开票、设施查询等高频问询自动化为可执行任务。业务落点/KPI：首次响应时长、自动处理率、前台人力释放。华住 AI 住中服务智能体在超 10000 家门店上线，累计执行超 180 万次任务，自动处理超 73% 高频问询，问答准确率超 95%，5 秒内响应并自动生成工单<sup class="refmark"><a href="#ref-26" id="cite-26">[26]</a></sup>；早期&quot;华小AI&quot;版本覆盖 3200 余家门店时自动处理 70% 以上高频问题<sup class="refmark"><a href="#ref-18" id="cite-18">[18]</a></sup>。锦江 JINTELL 在全国 2800 余家酒店上线，70% 客人来电由 AI 自主接听，86% 需求在 15 分钟内响应完成<sup class="refmark"><a href="#ref-20" id="cite-20">[20]</a></sup>。</p>
+<p><strong>判断 2｜收益管理是 AI 证据最硬、但&quot;信任赤字&quot;最大的环节：用的人多，敢放手的人少。</strong>
+机制：需求预测 + 动态定价 + 渠道比价，将定价从店长经验转向数据算法。业务落点/KPI：RevPAR、ADR、每间可售房收益。RoomPriceGenie 对 450 位收益决策者的调查显示，53% 已用 AI 做定价推荐，但仅 10% 完全信任并依赖其做多数定价决策<sup class="refmark"><a href="#ref-5" id="cite-5">[5]</a></sup>；85% 认为收益管理对盈利至关重要，却只有 21% 以战略层面运营，仅 36% 每月至少审查一次定价策略<sup class="refmark"><a href="#ref-5" id="cite-5">[5]</a></sup>。Mews 调查中 98% 酒店经营者已在至少一个运营领域使用 AI，平均在 19 项运营任务中的 11 项使用 AI，AI 处理约 56% 工作量<sup class="refmark"><a href="#ref-7" id="cite-7">[7]</a></sup>。</p>
+<p><strong>判断 3｜AI 的价值实现高度依赖&quot;系统可达性&quot;，数据割裂与集成成本是首要瓶颈，而非模型能力。</strong>
+机制：AI 只能作用于它能触达的系统与数据；PMS、CRS、POS、工单、渠道管理器的碎片化直接决定 AI 上限。业务落点/KPI：集成周期、数据就绪度、AI 项目存活率。State of Hotel AI 2026 调查中，67% 的酒店公司领导者将变革管理、数据质量或系统集成列为 AI 价值的前三大障碍，仅 8% 归因于模型本身限制<sup class="refmark"><a href="#ref-6" id="cite-6">[6]</a></sup>；42% 对数据就绪有信心，48% 没有<sup class="refmark"><a href="#ref-6" id="cite-6">[6]</a></sup>；即便在已有明确 AI 战略与治理的公司中，70% 表示执行仍然碎片化<sup class="refmark"><a href="#ref-6" id="cite-6">[6]</a></sup>。Mews 调查同样指出，碎片化技术栈是 AI 能力的单一最大限制因素<sup class="refmark"><a href="#ref-7" id="cite-7">[7]</a></sup>。</p>
+<p><strong>判断 4｜AI 正在把酒店分销入口从&quot;OTA 搜索&quot;推向&quot;AI 代理对话&quot;，酒店从&quot;被搜索&quot;变为&quot;被代理调用&quot;。</strong>
+机制：Google AI Mode 等对话式代理直接完成查价、选房、支付，酒店需要以结构化数据与 API 暴露库存和价格。业务落点/KPI：直订占比、OTA 佣金、AI 渠道可见性。Google 于 2026 年 8 月在美国推出 AI Mode 内酒店预订，合作方包括 Booking.com、Choice、Expedia、Hilton、IHG、Marriott、Wyndham 等<sup class="refmark"><a href="#ref-41" id="cite-41">[41]</a></sup>；但 Skift 实测发现 Meta 的 Muse 代理在 Hilton、Marriott、Hyatt 官网房型房价步骤失败，而另一代理 Instinct 成功返回会员价，说明&quot;接不接得住代理&quot;本身成为新的技术门槛<sup class="refmark"><a href="#ref-12" id="cite-12">[12]</a></sup>。BCG 研究亦指出 37% 消费者已开始用大语言模型规划旅行，能否进入 AI 推荐体系将直接影响流量获取<sup class="refmark"><a href="#ref-35" id="cite-35">[35]</a></sup>。</p>
+<p><strong>判断 5｜AI 对酒店组织的影响是&quot;总部职能上收、单店角色前移&quot;，而非简单减人。</strong>
+机制：收益管理、财务、排班等职能向集团 AI 中台集中，单店店长与前台从&quot;看报表、做登记&quot;转向&quot;处理客诉、维护关系、现场决策&quot;。业务落点/KPI：人房比、单店管理跨度、员工技能结构。State of Hotel AI 调查显示，19% 的受访者报告公司层面角色被重新定义，仅 4% 报告一线岗位被重新定义<sup class="refmark"><a href="#ref-6" id="cite-6">[6]</a></sup>；行业观察判断&quot;AI 数字店长&quot;将接管大量重复运营工作，首旅酒店集团总经理孙坚预判未来酒店日常运营中 60% 重复基础工作将由 AI 完成<sup class="refmark"><a href="#ref-56" id="cite-56">[56]</a></sup>。锦江的实践则强调 AI 替代的是重复、机械、低效率工作，而非人与人的核心互动<sup class="refmark"><a href="#ref-20" id="cite-20">[20]</a></sup>。</p>
+<p><strong>判断 6｜AI 的经济性目前是&quot;局部可证、整体待证&quot;：单点 ROI 有案例，组织级回本仍是少数。</strong>
+机制：单场景（定价、客服、排班）可量化节省工时或提升 RevPAR，但全公司 AI 投资回收需要跨系统、跨流程的复合效应。业务落点/KPI：投资回收期、GOPPAR、单任务成本。State of Hotel AI 调查中仅 24% 受访者表示 AI 投资已整体回本，28% 表示为时过早<sup class="refmark"><a href="#ref-6" id="cite-6">[6]</a></sup>；Mews 披露其 RMS 用户平均每平方米收入提升 13.7%，收益团队每月节省 20–30 小时<sup class="refmark"><a href="#ref-7" id="cite-7">[7]</a></sup>；Duetto 客户 RIMC 报告波兰物业 RevPAR 提升 28.44%，每家酒店每天节省 30 分钟定价监控时间<sup class="refmark"><a href="#ref-21" id="cite-21">[21]</a></sup>。</p>
+<p><strong>判断 7｜监管与责任正在成为 AI 自主化的硬边界，定价算法与员工排班是两条最敏感的红线。</strong>
+机制：算法定价可能触发反垄断合谋认定；AI 排班在欧盟被列为高风险；聊天机器人需履行透明度披露。业务落点/KPI：合规成本、人工复核比例、诉讼风险。美国第三巡回法院 2026 年 7 月恢复对 Caesars 等赌场酒店算法定价的反垄断集体诉讼，核心指控是酒店 90% 时间采纳 Cendyn Rainmaker 的推荐价格并形成非公开数据交换<sup class="refmark"><a href="#ref-27" id="cite-27">[27]</a></sup>；欧盟 AI Act 将 AI 驱动员工排班列为高风险（附件 III 第 4 类），须满足第 9–16 条完整义务，聊天机器人则须按第 50 条披露 AI 身份<sup class="refmark"><a href="#ref-49" id="cite-49">[49]</a></sup><sup class="refmark"><a href="#ref-50" id="cite-50">[50]</a></sup>。</p>
+<h1 id="h-3-02-业务流程与-ai-能力-变化发生在哪里-靠什么实现">02 业务流程与 AI 能力：变化发生在哪里、靠什么实现</h1>
+<h2 id="h-4-2-1-value-creation-domain-archet">2.1 Value Creation / Domain Archetype</h2>
+<p>酒店业属于 <strong>Travel / Service Operations</strong> 主范式，叠加 <strong>Transaction / Operations Network</strong> 次范式：需求预测 → 定价决策 → 交易履约 → 住中服务 → 风险与反馈 → 复购。价值创造链条为：</p>
+<blockquote>
+<p><strong>需求信号（OTA/直订/事件/竞品）→ 收益决策（定价、库存、渠道）→ 履约（预订、入住、住中服务）→ 体验（客诉、评价、会员）→ 资产回报（RevPAR、GOPPAR、NOI）</strong></p>
+</blockquote>
+<p>责任主体分散：业主承担资产回报，管理公司承担运营 KPI，品牌方承担标准与会员，OTA 掌握流量入口。这一结构决定了 AI 的价值必须同时通过&quot;运营效率&quot;和&quot;资产收益&quot;两道关口。</p>
+<h2 id="h-5-2-2-main-process-artifact-role-t">2.2 Main Process × Artifact × Role × Toolchain × KPI</h2>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>阶段</th>
+<th>业务问题</th>
+<th>核心 Artifact</th>
+<th>主要角色</th>
+<th>真实 Toolchain</th>
+<th>关键 KPI</th>
+<th>交接</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>需求预测</td>
+<td>未来卖多少、什么价</td>
+<td>预测曲线、预订进度、事件日历</td>
+<td>收益经理/店长</td>
+<td>RMS、PMS、渠道管理器、竞品比价</td>
+<td>预测准确率、RevPAR</td>
+<td>输出至定价</td>
+</tr>
+<tr>
+<td>定价与库存</td>
+<td>每房型每渠道卖什么价</td>
+<td>价格表、库存分配、限制条件</td>
+<td>收益经理/GM/业主</td>
+<td>RMS、CRS、OTA 后台</td>
+<td>ADR、RevPAR、直订占比</td>
+<td>输出至分销</td>
+</tr>
+<tr>
+<td>分销与预订</td>
+<td>客人从哪里来、怎么成交</td>
+<td>房价计划、可售库存、确认单</td>
+<td>预订员/渠道经理</td>
+<td>CRS、Booking Engine、OTA、GDS、AI 代理</td>
+<td>转化率、佣金率、取消率</td>
+<td>输出至入住</td>
+</tr>
+<tr>
+<td>入住与前台</td>
+<td>快速准确办理</td>
+<td>入住单、房态、押金记录</td>
+<td>前台</td>
+<td>PMS、自助机、身份证读取</td>
+<td>入住时长、排队长度</td>
+<td>输出至住中</td>
+</tr>
+<tr>
+<td>住中服务</td>
+<td>客人需求即时响应</td>
+<td>工单、送物记录、服务日志</td>
+<td>前台/客房/工程</td>
+<td>智能体、工单系统、机器人、PMS</td>
+<td>响应时长、自动处理率、CSAT</td>
+<td>输出至离店</td>
+</tr>
+<tr>
+<td>客房与工程</td>
+<td>房间按时可售、设施正常</td>
+<td>房态、清洁任务、维修工单</td>
+<td>客房服务员/工程</td>
+<td>客房管理、IoT、CMMS</td>
+<td>退房打扫及时率、每房清洁分钟</td>
+<td>输出至前台</td>
+</tr>
+<tr>
+<td>排班与人力</td>
+<td>用多少人、怎么排</td>
+<td>排班表、技能标签、工时</td>
+<td>部门经理/HR</td>
+<td>排班系统、PMS 预测、HRMS</td>
+<td>人房比、人工成本率、加班时长</td>
+<td>输出至运营</td>
+</tr>
+<tr>
+<td>财务与采购</td>
+<td>账实相符、成本可控</td>
+<td>发票、对账单、采购单</td>
+<td>财务/采购</td>
+<td>ERP、PMS 账务、采购系统</td>
+<td>发票处理周期、食品成本率</td>
+<td>输出至管理报表</td>
+</tr>
+<tr>
+<td>评价与会员</td>
+<td>口碑与复购</td>
+<td>点评、客史、会员标签</td>
+<td>宾客关系/市场</td>
+<td>点评管理、CRM、会员系统</td>
+<td>点评分、NPS、复购率</td>
+<td>反馈至需求预测</td>
+</tr>
+</tbody></table>
+</div><p>行业基准：中国酒店业人工成本率约 34.48%，人房比均值约 0.63，人均创收约 30.25 万元<sup class="refmark"><a href="#ref-28" id="cite-28">[28]</a></sup>；AHLA 2026 年 3 月调查中 65% 酒店业主将劳动力成本列为财务压力，42% 提及劳动力短缺，超过一半酒店仍存在不同程度人员不足<sup class="refmark"><a href="#ref-43" id="cite-43">[43]</a></sup>。</p>
+<h2 id="h-6-2-3-ai-capability-overlay">2.3 AI Capability Overlay</h2>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>AI 能力族</th>
+<th>需求预测</th>
+<th>定价库存</th>
+<th>分销预订</th>
+<th>入住前台</th>
+<th>住中服务</th>
+<th>客房工程</th>
+<th>排班人力</th>
+<th>财务采购</th>
+<th>评价会员</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Research &amp; Retrieval</td>
+<td>○</td>
+<td>●</td>
+<td>○</td>
+<td>—</td>
+<td>●</td>
+<td>—</td>
+<td>—</td>
+<td>○</td>
+<td>○</td>
+</tr>
+<tr>
+<td>Document/Content Intelligence</td>
+<td>—</td>
+<td>—</td>
+<td>○</td>
+<td>○</td>
+<td>●</td>
+<td>—</td>
+<td>—</td>
+<td>●</td>
+<td>●</td>
+</tr>
+<tr>
+<td>Generation</td>
+<td>—</td>
+<td>○</td>
+<td>○</td>
+<td>—</td>
+<td>●</td>
+<td>—</td>
+<td>—</td>
+<td>○</td>
+<td>●</td>
+</tr>
+<tr>
+<td>Prediction/Scoring</td>
+<td>●</td>
+<td>●</td>
+<td>○</td>
+<td>—</td>
+<td>○</td>
+<td>○</td>
+<td>●</td>
+<td>○</td>
+<td>○</td>
+</tr>
+<tr>
+<td>Optimization</td>
+<td>○</td>
+<td>●</td>
+<td>○</td>
+<td>—</td>
+<td>○</td>
+<td>●</td>
+<td>●</td>
+<td>○</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Simulation</td>
+<td>○</td>
+<td>●</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>○</td>
+<td>○</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Multimodal Understanding</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>●</td>
+<td>●</td>
+<td>○</td>
+<td>—</td>
+<td>○</td>
+<td>○</td>
+</tr>
+<tr>
+<td>Tool Use</td>
+<td>—</td>
+<td>●</td>
+<td>●</td>
+<td>○</td>
+<td>●</td>
+<td>○</td>
+<td>○</td>
+<td>●</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Workflow Orchestration</td>
+<td>○</td>
+<td>●</td>
+<td>●</td>
+<td>○</td>
+<td>●</td>
+<td>●</td>
+<td>●</td>
+<td>●</td>
+<td>○</td>
+</tr>
+<tr>
+<td>Monitoring/Feedback</td>
+<td>○</td>
+<td>●</td>
+<td>○</td>
+<td>—</td>
+<td>●</td>
+<td>●</td>
+<td>○</td>
+<td>○</td>
+<td>●</td>
+</tr>
+<tr>
+<td>Knowledge/Memory</td>
+<td>○</td>
+<td>○</td>
+<td>—</td>
+<td>○</td>
+<td>●</td>
+<td>○</td>
+<td>—</td>
+<td>○</td>
+<td>●</td>
+</tr>
+</tbody></table>
+</div><p>● 强相关　○ 中等相关　— 弱相关</p>
+<h2 id="h-7-2-4-judgment-process-capability-">2.4 Judgment → Process → Capability 映射</h2>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>判断</th>
+<th>主要流程</th>
+<th>核心 AI 能力</th>
+<th>关键 KPI</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>J1 住中服务自动化</td>
+<td>住中服务、入住前台</td>
+<td>Workflow Orchestration、Tool Use、Multimodal</td>
+<td>响应时长、自动处理率</td>
+</tr>
+<tr>
+<td>J2 收益管理信任赤字</td>
+<td>需求预测、定价库存</td>
+<td>Prediction、Optimization、Simulation</td>
+<td>RevPAR、ADR、预测准确率</td>
+</tr>
+<tr>
+<td>J3 系统可达性瓶颈</td>
+<td>全流程</td>
+<td>Tool Use、Workflow Orchestration、Knowledge</td>
+<td>集成周期、数据就绪度</td>
+</tr>
+<tr>
+<td>J4 分销入口代理化</td>
+<td>分销预订</td>
+<td>Tool Use、Generation、Research</td>
+<td>直订占比、AI 渠道可见性</td>
+</tr>
+<tr>
+<td>J5 组织职能上收</td>
+<td>排班人力、财务采购、收益</td>
+<td>Optimization、Workflow Orchestration</td>
+<td>人房比、管理跨度</td>
+</tr>
+<tr>
+<td>J6 经济性局部可证</td>
+<td>全流程</td>
+<td>组合能力</td>
+<td>投资回收期、GOPPAR</td>
+</tr>
+<tr>
+<td>J7 监管硬边界</td>
+<td>定价库存、排班人力</td>
+<td>Optimization、Prediction</td>
+<td>合规成本、人工复核比例</td>
+</tr>
+</tbody></table>
+</div><h2 id="h-8-2-5-高价值交叉点">2.5 高价值交叉点</h2>
+<p><strong>住中服务 × 工作流编排</strong>（证据最充分）、<strong>收益管理 × 预测优化</strong>（价值最大但信任最低）、<strong>分销预订 × 代理调用</strong>（变化最快但最不确定）、<strong>排班人力 × 优化</strong>（ROI 清晰但监管最严）、<strong>财务采购 × 文档智能</strong>（低调但可量化）。</p>
+<h1 id="h-9-03-高价值场景-ai-在真实工作中怎么用">03 高价值场景：AI 在真实工作中怎么用</h1>
+<h2 id="h-10-场景-1-ai-住中服务智能体-对应-j1-j3">场景 1｜AI 住中服务智能体（对应 J1、J3）</h2>
+<ul>
+<li><strong>Workflow</strong>：客人通过 App/小程序/电话提出送物、续住、开票、设施查询 → 意图识别拆解多意图 → 自动生成工单 → 联动机器人/服务员 → 完成并回访。</li>
+<li><strong>Input</strong>：住客自然语言请求、房号、订单状态、PMS 房态。</li>
+<li><strong>Output</strong>：工单、配送任务、开票记录、服务日志。</li>
+<li><strong>Data</strong>：PMS、CRM、工单系统、知识库、历史服务记录。</li>
+<li><strong>Tool</strong>：腾讯云智能体开发平台（ADP）、华住 PMS/CRM/工单系统、机器人<sup class="refmark"><a href="#ref-26" id="cite-26">[26]</a></sup>。</li>
+<li><strong>局部 Human Gate</strong>：投诉、赔偿、VIP 特殊需求转人工；工单异常升级。</li>
+<li><strong>Failure Point</strong>：多意图识别错误、知识库过期、机器人与电梯/门禁不兼容、跨系统工单丢失。</li>
+<li><strong>KPI</strong>：5 秒响应、自动处理率 73%+、问答准确率 95%+、住客日使用率最高 94%<sup class="refmark"><a href="#ref-26" id="cite-26">[26]</a></sup>。</li>
+<li><strong>证据等级</strong>：E3–E4（真实生产工作流 + 规模化门店，但组织级 ROI 未披露）。</li>
+</ul>
+<h2 id="h-11-场景-2-ai-语音客服-前台-对应-j1-j6">场景 2｜AI 语音客服/前台（对应 J1、J6）</h2>
+<ul>
+<li><strong>Workflow</strong>：客人来电 → AI 接听 → 意图识别 → 查询/办理（续住、开票、设施咨询）→ 无法处理转人工并带上下文。</li>
+<li><strong>Input</strong>：语音流、来电号码、会员信息。</li>
+<li><strong>Output</strong>：通话记录、工单、预订变更。</li>
+<li><strong>Data</strong>：PMS、CRM、知识库、电话系统。</li>
+<li><strong>Tool</strong>：JINTELL（锦江）、Canary AI Voice、Asksuite 等<sup class="refmark"><a href="#ref-20" id="cite-20">[20]</a></sup><sup class="refmark"><a href="#ref-34" id="cite-34">[34]</a></sup>。</li>
+<li><strong>局部 Human Gate</strong>：投诉、支付争议、VIP 转人工。</li>
+<li><strong>Failure Point</strong>：方言/口音识别、背景噪音、复杂变更、系统写入失败。</li>
+<li><strong>KPI</strong>：AI 自主接听率 70%、15 分钟内响应率 86%<sup class="refmark"><a href="#ref-20" id="cite-20">[20]</a></sup>；行业侧 40% 酒店来电未被接听，AI 可将呼叫量降低 20–30%、平均处理时长降低 15–25%<sup class="refmark"><a href="#ref-34" id="cite-34">[34]</a></sup>。</li>
+<li><strong>证据等级</strong>：E3（锦江为生产级；行业数据为第三方汇总）。</li>
+</ul>
+<h2 id="h-12-场景-3-ai-收益管理与动态定价-对应-j2-j6-j7">场景 3｜AI 收益管理与动态定价（对应 J2、J6、J7）</h2>
+<ul>
+<li><strong>Workflow</strong>：接入预订进度、竞品价格、事件日历、天气/航班 → 预测需求 → 生成价格建议或自动调价 → 渠道分发 → 复盘。</li>
+<li><strong>Input</strong>：PMS 预订数据、OTA 比价、事件日历、历史 ADR/入住率。</li>
+<li><strong>Output</strong>：价格建议、库存限制、渠道价格。</li>
+<li><strong>Data</strong>：RMS、PMS、CRS、渠道管理器、外部市场数据。</li>
+<li><strong>Tool</strong>：IDeaS G3 RMS、Duetto、Mews RMS、RoomPriceGenie、美团既白<sup class="refmark"><a href="#ref-44" id="cite-44">[44]</a></sup><sup class="refmark"><a href="#ref-21" id="cite-21">[21]</a></sup><sup class="refmark"><a href="#ref-7" id="cite-7">[7]</a></sup><sup class="refmark"><a href="#ref-5" id="cite-5">[5]</a></sup><sup class="refmark"><a href="#ref-42" id="cite-42">[42]</a></sup>。</li>
+<li><strong>局部 Human Gate</strong>：超出授权价格带、重大活动、竞品异常、业主审批。</li>
+<li><strong>Failure Point</strong>：预测偏差、价格战误判、渠道价格不一致、算法公平性争议、反垄断风险。</li>
+<li><strong>KPI</strong>：RevPAR、ADR、预测准确率、每间可售房收益。</li>
+<li><strong>证据等级</strong>：E3–E4（厂商客户案例多为 E3；Cornell 7.2% 收入提升为学术引用<sup class="refmark"><a href="#ref-34" id="cite-34">[34]</a></sup>；组织级 ROI 仅 24% 受访者确认<sup class="refmark"><a href="#ref-6" id="cite-6">[6]</a></sup>）。</li>
+</ul>
+<h2 id="h-13-场景-4-ai-排班与人力优化-对应-j5-j7">场景 4｜AI 排班与人力优化（对应 J5、J7）</h2>
+<ul>
+<li><strong>Workflow</strong>：入住率预测 → 各岗位人力需求曲线 → 技能标签匹配 → 排班 → 异常调整 → 人效看板。</li>
+<li><strong>Input</strong>：PMS 预订、会议安排、员工技能、工时规则。</li>
+<li><strong>Output</strong>：排班表、跨岗调度、计件工资。</li>
+<li><strong>Data</strong>：PMS、HRMS、排班系统。</li>
+<li><strong>Tool</strong>：金天鹅 PMS 动态排班、Quinyx、Shiftbase 等<sup class="refmark"><a href="#ref-28" id="cite-28">[28]</a></sup><sup class="refmark"><a href="#ref-49" id="cite-49">[49]</a></sup>。</li>
+<li><strong>局部 Human Gate</strong>：加班审批、合同例外、员工申诉。</li>
+<li><strong>Failure Point</strong>：预测偏差导致排班不足/冗余、技能标签不准、员工抵触、欧盟高风险合规。</li>
+<li><strong>KPI</strong>：人房比、人工成本率、退房打扫及时率、员工流失率。样本测算显示旺季人力缺口减少约 60%、淡季工时浪费降低约 35%、多岗调度人力成本下降约 12%、退房打扫及时率从 85% 升至 98%<sup class="refmark"><a href="#ref-28" id="cite-28">[28]</a></sup>。</li>
+<li><strong>证据等级</strong>：E2（样本测算，非独立生产验证）；欧盟合规要求为 A 级法规<sup class="refmark"><a href="#ref-49" id="cite-49">[49]</a></sup>。</li>
+</ul>
+<h2 id="h-14-场景-5-ai-分销与代理预订-对应-j4">场景 5｜AI 分销与代理预订（对应 J4）</h2>
+<ul>
+<li><strong>Workflow</strong>：旅客在 Google AI Mode/个人代理中自然语言描述需求 → 代理查询酒店/OTA 库存与价格 → 展示选项 → 旅客确认 → Google Pay 支付 → 酒店/OTA 出确认单。</li>
+<li><strong>Input</strong>：旅客对话、日期/人数/偏好、会员信息。</li>
+<li><strong>Output</strong>：预订确认、支付凭证。</li>
+<li><strong>Data</strong>：Google Hotel Ads 库存、酒店 CRS/PMS、OTA 库存。</li>
+<li><strong>Tool</strong>：Google AI Mode、Booking.com、Expedia、Marriott、IHG、Wyndham 等<sup class="refmark"><a href="#ref-41" id="cite-41">[41]</a></sup>。</li>
+<li><strong>局部 Human Gate</strong>：旅客确认房型与取消条款、支付授权；酒店侧异常订单人工复核。</li>
+<li><strong>Failure Point</strong>：代理抓取失败（Muse 在三大集团官网失败<sup class="refmark"><a href="#ref-12" id="cite-12">[12]</a></sup>）、价格/库存不同步、会员价无法识别、数据回传有限导致酒店失去转化路径可见性<sup class="refmark"><a href="#ref-41" id="cite-41">[41]</a></sup>。</li>
+<li><strong>KPI</strong>：AI 渠道预订量、直订占比、OTA 佣金率、转化率。</li>
+<li><strong>证据等级</strong>：E2–E3（已上线但早期，规模化效果未披露）。</li>
+</ul>
+<h2 id="h-15-场景-6-ai-经营参谋-数字店长-对应-j5-j6">场景 6｜AI 经营参谋/数字店长（对应 J5、J6）</h2>
+<ul>
+<li><strong>Workflow</strong>：整合内部经营数据与外部市场数据 → 经营诊断 → 定价/预算/复盘建议 → 商家决策。</li>
+<li><strong>Input</strong>：PMS 订单/价格/库存、OTA 数据、本地消费数据、事件。</li>
+<li><strong>Output</strong>：诊断报告、定价参考、预算建议、复盘。</li>
+<li><strong>Data</strong>：美团本地生活数据、酒店 PMS、OTA。</li>
+<li><strong>Tool</strong>：美团既白轻享版/旗舰版<sup class="refmark"><a href="#ref-42" id="cite-42">[42]</a></sup>。</li>
+<li><strong>局部 Human Gate</strong>：具体经营决策仍由商家作出<sup class="refmark"><a href="#ref-42" id="cite-42">[42]</a></sup>。</li>
+<li><strong>Failure Point</strong>：数据覆盖不全、建议不可执行、商家不信任。</li>
+<li><strong>KPI</strong>：运营效率提升（披露超 30%<sup class="refmark"><a href="#ref-40" id="cite-40">[40]</a></sup>）、决策采纳率、RevPAR。</li>
+<li><strong>证据等级</strong>：E2–E3（14 万中小商家覆盖为规模信号，但量化经营结果披露有限）。</li>
+</ul>
+<h2 id="h-16-场景-7-ai-客房清洁与机器人配送-对应-j1-j5">场景 7｜AI 客房清洁与机器人配送（对应 J1、J5）</h2>
+<ul>
+<li><strong>Workflow</strong>：房态变化 → 清洁任务排序 → 机器人送物 → 清洁质量上传 → 房态更新。</li>
+<li><strong>Input</strong>：PMS 房态、住客送物请求、清洁标准。</li>
+<li><strong>Output</strong>：清洁任务、配送记录、房态。</li>
+<li><strong>Data</strong>：PMS、客房管理、机器人调度系统。</li>
+<li><strong>Tool</strong>：云迹科技 HDOS、送物机器人、煮面机器人<sup class="refmark"><a href="#ref-13" id="cite-13">[13]</a></sup>。</li>
+<li><strong>局部 Human Gate</strong>：异常房态、投诉、设备故障。</li>
+<li><strong>Failure Point</strong>：电梯/门禁适配、高峰期机器人排队、清洁质量抽检。</li>
+<li><strong>KPI</strong>：每房清洁分钟、退房打扫及时率、机器人任务完成量。云迹机器人累计覆盖超 4.5 万家酒店，HDOS 客户超 5000 家，日均在线机器人同比增长 20–25%，任务量同比增长 25–30%<sup class="refmark"><a href="#ref-13" id="cite-13">[13]</a></sup>。</li>
+<li><strong>证据等级</strong>：E3（规模化部署），但单店 ROI 未披露。</li>
+</ul>
+<h1 id="h-17-04-学术与行业进展-最近技术和产业发生了什么变化">04 学术与行业进展：最近技术和产业发生了什么变化</h1>
+<h2 id="h-18-academic-research">Academic / Research</h2>
+<p>近 12–24 个月酒店 AI 研究集中在四条线：</p>
+<ol>
+<li><strong>需求预测与定价</strong>：系统综述识别 20 篇 AI 酒店需求预测论文，指出模型规格不清晰、AI 影响理解不足是主要缺口<sup class="refmark"><a href="#ref-3" id="cite-3">[3]</a></sup>；主动学习增强的 ML 模型可有效学习并模拟资深收益经理的调价行为，在马来西亚五星级酒店真实销售数据上降低预测误差<sup class="refmark"><a href="#ref-3" id="cite-3">[3]</a></sup>；带公平约束的两阶段深度强化学习动态歧视定价模型被提出，试图在收益与价格公平感知之间取得平衡<sup class="refmark"><a href="#ref-17" id="cite-17">[17]</a></sup>。</li>
+<li><strong>AI 与盈利能力</strong>：对德国 312 家中端与高端酒店的横截面调查发现，AI 采用与酒店盈利能力之间的关系仍存争议，&quot;技术能力是否转化为可测量利润增长&quot;尚无定论<sup class="refmark"><a href="#ref-3" id="cite-3">[3]</a></sup>。</li>
+<li><strong>组织与工作设计</strong>：新加坡本土酒店连锁 10 位管理者访谈显示，AI 带来成本降低、效率提升和更好客户体验，但人工干预仍然必要<sup class="refmark"><a href="#ref-4" id="cite-4">[4]</a></sup>；一线服务员工的 AI 工作设计研究指出 AI 对工作特征的影响因场景而异，并非单向替代<sup class="refmark"><a href="#ref-4" id="cite-4">[4]</a></sup><sup class="refmark"><a href="#ref-47" id="cite-47">[47]</a></sup>；酒店业 AI 经济影响研究将 AI 角色分为自动化、信息提供、转型三类，但强调 AI 与具体业务成果的实证证据仍然有限<sup class="refmark"><a href="#ref-30" id="cite-30">[30]</a></sup>。</li>
+<li><strong>代理与治理</strong>：多智能体系统跨组织边界的风险与控制框架被提出<sup class="refmark"><a href="#ref-46" id="cite-46">[46]</a></sup>；自主 AI 代理在企业系统中的安全、可观测性、治理与弹性四大架构缺口被系统梳理<sup class="refmark"><a href="#ref-46" id="cite-46">[46]</a></sup>；酒店、机场与旅游服务的人机协作研究强调信任校准与劳动力转型需作为社会技术系统整体设计<sup class="refmark"><a href="#ref-46" id="cite-46">[46]</a></sup>。</li>
+</ol>
+<p><strong>学术侧结论</strong>：能力边界在扩展（预测、定价、代理），但&quot;AI → 利润&quot;的因果证据仍然薄弱，公平性、可解释性与人机协作是主要研究缺口。</p>
+<h2 id="h-19-technology-product">Technology / Product</h2>
+<ul>
+<li><strong>智能体从&quot;对话&quot;走向&quot;执行&quot;</strong>：华住 AI 住中服务智能体强调&quot;可真正执行而非仅对话&quot;，通过 ADP 平台打通 PMS/CRM/工单，38 条工作流覆盖 10 大场景 152 个子场景<sup class="refmark"><a href="#ref-26" id="cite-26">[26]</a></sup>。</li>
+<li><strong>RMS 云化与实时化</strong>：Duetto、IDeaS、Mews RMS 均以云原生、实时需求驱动定价为核心卖点<sup class="refmark"><a href="#ref-21" id="cite-21">[21]</a></sup><sup class="refmark"><a href="#ref-44" id="cite-44">[44]</a></sup><sup class="refmark"><a href="#ref-7" id="cite-7">[7]</a></sup>。</li>
+<li><strong>AI 经营参谋产品化</strong>：美团既白从&quot;提效助手&quot;转向&quot;经营参谋&quot;，分层覆盖中小酒店与高星连锁<sup class="refmark"><a href="#ref-42" id="cite-42">[42]</a></sup>。</li>
+<li><strong>机器人硬件+软件一体化</strong>：云迹从单点送物机器人扩展到 HDOS 酒店数字化运营系统，并推出煮面机器人延伸至餐饮场景<sup class="refmark"><a href="#ref-13" id="cite-13">[13]</a></sup>。</li>
+<li><strong>代理间商务（agent-to-agent commerce）</strong>：Google AI Mode 内预订上线，酒店/OTA 仍为记录商户，Google 仅传递完成预订所需最少数据<sup class="refmark"><a href="#ref-41" id="cite-41">[41]</a></sup>；MCP 等标准化接口被用于让 AI 代理程序化访问酒店数据<sup class="refmark"><a href="#ref-34" id="cite-34">[34]</a></sup>。</li>
+</ul>
+<h2 id="h-20-industry-commercial-signals">Industry / Commercial Signals</h2>
+<ul>
+<li><strong>采用率高但成熟度低</strong>：BCG 研究显示全球约 25% 酒店企业已进入 AI 规模化应用阶段，仅 8% 达到&quot;AI Future-Built&quot;成熟阶段，约 33% 仍停留在起步阶段<sup class="refmark"><a href="#ref-35" id="cite-35">[35]</a></sup>；Mews 调查 98% 酒店经营者已在至少一个领域使用 AI<sup class="refmark"><a href="#ref-7" id="cite-7">[7]</a></sup>；h2c 研究显示 78% 酒店连锁使用 AI，但仅 7% 有文档化战略<sup class="refmark"><a href="#ref-50" id="cite-50">[50]</a></sup>。</li>
+<li><strong>投资意愿强、回本确认弱</strong>：State of Hotel AI 调查中无受访者计划减少 AI 支出，37% 预计增加 10% 以上，但仅 24% 表示已整体回本<sup class="refmark"><a href="#ref-6" id="cite-6">[6]</a></sup>。</li>
+<li><strong>中国酒店集团规模化落地加速</strong>：华住万店覆盖、锦江 2800+ 店 JINTELL、云迹 4.5 万家酒店、美团既白 14 万中小商家，构成全球最密集的酒店 AI 生产级样本之一<sup class="refmark"><a href="#ref-26" id="cite-26">[26]</a></sup><sup class="refmark"><a href="#ref-20" id="cite-20">[20]</a></sup><sup class="refmark"><a href="#ref-13" id="cite-13">[13]</a></sup><sup class="refmark"><a href="#ref-42" id="cite-42">[42]</a></sup>。</li>
+<li><strong>分销入口重构</strong>：Google AI Mode 酒店预订上线，合作方覆盖主要连锁与 OTA<sup class="refmark"><a href="#ref-41" id="cite-41">[41]</a></sup>；但代理抓取稳定性仍是瓶颈<sup class="refmark"><a href="#ref-12" id="cite-12">[12]</a></sup>。</li>
+</ul>
+<h2 id="h-21-当前边界">当前边界</h2>
+<ul>
+<li><strong>模型能力不是主要瓶颈</strong>：67% 的障碍来自变革管理、数据质量与集成，仅 8% 来自模型限制<sup class="refmark"><a href="#ref-6" id="cite-6">[6]</a></sup>。</li>
+<li><strong>信任是收益管理的天花板</strong>：53% 用 AI 定价，仅 10% 完全信任<sup class="refmark"><a href="#ref-5" id="cite-5">[5]</a></sup>。</li>
+<li><strong>组织级 ROI 尚未规模化</strong>：24% 回本、28% 为时过早<sup class="refmark"><a href="#ref-6" id="cite-6">[6]</a></sup>。</li>
+<li><strong>监管开始形成硬约束</strong>：算法定价反垄断诉讼恢复<sup class="refmark"><a href="#ref-27" id="cite-27">[27]</a></sup>、欧盟 AI Act 高风险分类<sup class="refmark"><a href="#ref-49" id="cite-49">[49]</a></sup>。</li>
+<li><strong>代理分销仍早期</strong>：Google AI Mode 2026 年 8 月才上线，规模化效果未披露<sup class="refmark"><a href="#ref-41" id="cite-41">[41]</a></sup>。</li>
+</ul>
+<h1 id="h-22-05-产品-案例与实证-谁真正做到了-效果如何">05 产品、案例与实证：谁真正做到了，效果如何</h1>
+<h2 id="h-23-产品路线全景">产品路线全景</h2>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>层级</th>
+<th>代表产品</th>
+<th>占据栈位置</th>
+<th>核心能力</th>
+<th>证据等级</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>收益管理 RMS</td>
+<td>IDeaS G3 RMS、Duetto、Mews RMS、RoomPriceGenie</td>
+<td>定价与预测层</td>
+<td>需求预测、动态定价、渠道优化</td>
+<td>E3–E4（厂商案例）</td>
+</tr>
+<tr>
+<td>住中服务智能体</td>
+<td>华住×腾讯云 AI 住中、锦江 JINTELL</td>
+<td>服务执行层</td>
+<td>意图识别、工单编排、PMS 打通</td>
+<td>E3–E4（生产规模）</td>
+</tr>
+<tr>
+<td>经营参谋</td>
+<td>美团既白</td>
+<td>经营决策层</td>
+<td>诊断、定价参考、预算、复盘</td>
+<td>E2–E3</td>
+</tr>
+<tr>
+<td>机器人/硬件</td>
+<td>云迹科技 HDOS、送物/煮面机器人</td>
+<td>物理执行层</td>
+<td>配送、清洁、餐饮延伸</td>
+<td>E3（规模部署）</td>
+</tr>
+<tr>
+<td>分销代理</td>
+<td>Google AI Mode、OTA 代理</td>
+<td>流量入口层</td>
+<td>对话式查价预订</td>
+<td>E2–E3（早期）</td>
+</tr>
+<tr>
+<td>客服/语音</td>
+<td>Canary、Asksuite、HiJiffy</td>
+<td>宾客沟通层</td>
+<td>全渠道消息、语音、合规披露</td>
+<td>E2–E3（厂商披露）</td>
+</tr>
+</tbody></table>
+</div><h2 id="h-24-代表产品">代表产品</h2>
+<p><strong>IDeaS G3 RMS</strong>：面向酒店集团的收益管理系统，强调自动化定价与可扩展性；官网披露服务 34,000+ 物业、98% 留存率<sup class="refmark"><a href="#ref-44" id="cite-44">[44]</a></sup>。客户案例包括 Anantara Hotels 17 家物业部署后 RevPAR 同比增长 14.86%、ADR 增长 15.74%<sup class="refmark"><a href="#ref-34" id="cite-34">[34]</a></sup>；The Umstead Hotel and Spa 自 2008 年使用，入住率提升 8.1%、ADR 提升 16.1%、RevPAR 提升 25.2%<sup class="refmark"><a href="#ref-34" id="cite-34">[34]</a></sup>。证据属性：厂商/客户披露，非独立验证。</p>
+<p><strong>Duetto</strong>：云原生 RMS，强调实时需求驱动定价。RIMC Hotels &amp; Resorts 案例：2022 年部署前无 RMS、手工定价；部署后波兰物业 RevPAR 提升 28.44%，整体组合 RevPAR 增长，每家酒店每天节省 30 分钟定价监控时间<sup class="refmark"><a href="#ref-21" id="cite-21">[21]</a></sup>。证据属性：客户实名 + 量化结果，但为厂商案例页披露。</p>
+<p><strong>华住 AI 住中服务智能体（腾讯云 ADP）</strong>：2025 年下半年启动，3 个月交付、7 个月万店覆盖；38 条工作流、10 大场景、152 个子场景；自动处理超 73% 高频问询，问答准确率超 95%，5 秒内响应并自动生成工单，累计执行超 180 万次任务，住客日最高使用率 94%；覆盖门店中三四线及县域占比超 35%<sup class="refmark"><a href="#ref-26" id="cite-26">[26]</a></sup>。证据属性：官方新闻稿 + 新华社《经济参考报》报道，A/B 级。</p>
+<p><strong>锦江 JINTELL</strong>：全国 2800 余家酒店上线，70% 客人来电由 AI 自主接听，86% 需求 15 分钟内响应完成；客诉 AI 应用上线后相关门店客诉处理时长缩短约 80%、差评数量下降 45%、新人培养周期缩短约 50%；行李寄存 AI 识别录入时间压缩至 30 秒以内，覆盖 400 余家门店<sup class="refmark"><a href="#ref-20" id="cite-20">[20]</a></sup>。证据属性：界面新闻专访 + 企业披露，B 级。</p>
+<p><strong>云迹科技 HDOS</strong>：机器人累计覆盖超 4.5 万家酒店，HDOS 客户超 5000 家、同比增长约 230%，付费客户同比增长约 220%；日均在线机器人同比增长 20–25%，任务量同比增长 25–30%；新推煮面机器人，部分产品进入主要酒店集团新店必采清单<sup class="refmark"><a href="#ref-13" id="cite-13">[13]</a></sup>。证据属性：企业运营数据披露，B 级。</p>
+<p><strong>美团既白</strong>：轻享版 2025 年 6 月上线，覆盖 14 万中小酒店商家；旗舰版面向高星及连锁，内置&quot;AI 专家团&quot;承担数据分析、经营诊断、建议生成，具体决策仍由商家作出；披露运营效率提升超 30%<sup class="refmark"><a href="#ref-42" id="cite-42">[42]</a></sup><sup class="refmark"><a href="#ref-40" id="cite-40">[40]</a></sup>。证据属性：厂商发布 + 媒体报道，B/C 级。</p>
+<h2 id="h-25-实名客户案例">实名客户案例</h2>
+<p><strong>RIMC Hotels &amp; Resorts Group（Duetto）</strong>：汉堡总部国际酒店集团，2022 年前无 RMS、手工定价、PMS 调整、耗时低效；部署 Duetto 后实现实时需求驱动定价与自动推荐，波兰物业 RevPAR 提升 28.44%，整体组合 RevPAR 增长，每家酒店每天节省 30 分钟<sup class="refmark"><a href="#ref-21" id="cite-21">[21]</a></sup>。Evidence Level：E3（真实工作流 + 量化结果，厂商披露）。Limitation：单一集团、未披露成本与利润率。</p>
+<p><strong>Anantara Hotels（IDeaS）</strong>：17 家亚洲物业部署 IDeaS Pricing System，RevPAR 同比增长 14.86%、平均每日客房收入增长 17.31%、ADR 增长 15.74%，由集团收益管理总监确认<sup class="refmark"><a href="#ref-34" id="cite-34">[34]</a></sup>。Evidence Level：E3。Limitation：厂商引用客户确认，非独立审计。</p>
+<p><strong>华住（腾讯云）</strong>：万店级生产部署，180 万次任务、73% 自动处理率、95% 准确率、94% 日使用率<sup class="refmark"><a href="#ref-26" id="cite-26">[26]</a></sup>。Evidence Level：E3–E4（规模化生产 + 效率指标，但未披露人力成本节省或 RevPAR 贡献）。Limitation：未披露失败率、人工接管率、单店经济性。</p>
+<p><strong>锦江（JINTELL/锦鲲）</strong>：2800+ 店语音 AI、400+ 店行李 AI、客诉处理时长缩短 80%、差评下降 45%、新人培养周期缩短 50%<sup class="refmark"><a href="#ref-20" id="cite-20">[20]</a></sup>。Evidence Level：E3–E4。Limitation：企业披露，未披露对照组与统计显著性。</p>
+<h2 id="h-26-evidence-ladder-汇总">Evidence Ladder 汇总</h2>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>判断</th>
+<th>最强证据</th>
+<th>等级</th>
+<th>缺口</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>J1 住中服务自动化</td>
+<td>华住万店、180 万任务、73% 自动处理</td>
+<td>E3–E4</td>
+<td>组织级人力节省未披露</td>
+</tr>
+<tr>
+<td>J2 收益管理信任赤字</td>
+<td>53% 使用 vs 10% 完全信任<sup class="refmark"><a href="#ref-5" id="cite-5">[5]</a></sup></td>
+<td>E3（调查）</td>
+<td>因果性 ROI 证据弱</td>
+</tr>
+<tr>
+<td>J3 系统可达性瓶颈</td>
+<td>67% 障碍来自集成/数据<sup class="refmark"><a href="#ref-6" id="cite-6">[6]</a></sup></td>
+<td>E3（调查）</td>
+<td>缺少集成成本量化</td>
+</tr>
+<tr>
+<td>J4 分销代理化</td>
+<td>Google AI Mode 上线<sup class="refmark"><a href="#ref-41" id="cite-41">[41]</a></sup></td>
+<td>E2–E3</td>
+<td>规模化预订效果未披露</td>
+</tr>
+<tr>
+<td>J5 组织职能上收</td>
+<td>19% 公司角色重定义 vs 4% 一线<sup class="refmark"><a href="#ref-6" id="cite-6">[6]</a></sup></td>
+<td>E3（调查）</td>
+<td>中国样本有限</td>
+</tr>
+<tr>
+<td>J6 经济性局部可证</td>
+<td>24% 回本<sup class="refmark"><a href="#ref-6" id="cite-6">[6]</a></sup>；RMS 案例<sup class="refmark"><a href="#ref-21" id="cite-21">[21]</a></sup><sup class="refmark"><a href="#ref-34" id="cite-34">[34]</a></sup></td>
+<td>E3</td>
+<td>组织级 ROI 样本少</td>
+</tr>
+<tr>
+<td>J7 监管硬边界</td>
+<td>反垄断诉讼<sup class="refmark"><a href="#ref-27" id="cite-27">[27]</a></sup>、EU AI Act<sup class="refmark"><a href="#ref-49" id="cite-49">[49]</a></sup></td>
+<td>A（法规/判例）</td>
+<td>执法效果待观察</td>
+</tr>
+</tbody></table>
+</div><h1 id="h-27-06-ai-如何改变人的工作方式与组织分工">06 AI 如何改变人的工作方式与组织分工</h1>
+<p><strong>个人工作方式</strong>：收益经理从&quot;每天调几次价、做报表&quot;转向&quot;设定参数、审核异常、解释策略&quot;；RoomPriceGenie 调查显示 45% 的酒店运营团队缺乏解读收益数据的信心，AI 把数据整理工作接走后，人的核心任务变成&quot;判断 AI 的建议是否合理&quot;<sup class="refmark"><a href="#ref-5" id="cite-5">[5]</a></sup>。前台从&quot;登记、转接、送物&quot;转向&quot;处理复杂客诉、维护关系、现场决策&quot;；锦江明确 AI 替代的是重复、机械、低效率工作，而非人与人的核心互动<sup class="refmark"><a href="#ref-20" id="cite-20">[20]</a></sup>。客房服务员从&quot;拿房卡开门&quot;转向&quot;接收 AI 派发的清洁最优路径指令并上传质量数据&quot;<sup class="refmark"><a href="#ref-56" id="cite-56">[56]</a></sup>。</p>
+<p><strong>Human–AI 分工</strong>：Mews 调查给出清晰分层——费率管理、数据分析、内容生产、点评管理、翻译是&quot;可放心加大自动化&quot;的安全区；入住、礼宾、宾客沟通适合&quot;混合模式&quot;；客房排班、人力规划、采购是&quot;高舒适度但低使用&quot;的待开发后台； upsell、忠诚度管理、员工培训是&quot;需谨慎&quot;的高触感区；83% 专家认为到 2035 年混合模式将成为行业常态，0% 奢华酒店专家会完全自动化礼宾角色<sup class="refmark"><a href="#ref-7" id="cite-7">[7]</a></sup>。</p>
+<p><strong>岗位职责与技能</strong>：State of Hotel AI 调查显示 19% 的受访者报告公司层面角色被重新定义，仅 4% 报告一线岗位被重新定义<sup class="refmark"><a href="#ref-6" id="cite-6">[6]</a></sup>；行业观察判断&quot;AI 数字店长&quot;将接管大量重复运营工作，店长核心 KPI 从&quot;看报表&quot;转向&quot;现场体验与销售&quot;，首旅孙坚预判 60% 重复基础工作将由 AI 完成<sup class="refmark"><a href="#ref-56" id="cite-56">[56]</a></sup>。BCG 指出旅游行业仅 2.9% 的全员工具备 AI 技能<sup class="refmark"><a href="#ref-35" id="cite-35">[35]</a></sup>。</p>
+<p><strong>团队协作与组织分工</strong>：总部职能上收趋势明显——收益管理、财务、排班等向集团 AI 中台集中，单店组织扁平化<sup class="refmark"><a href="#ref-56" id="cite-56">[56]</a></sup>；Mews 调查中 3/4 酒店已培训团队使用 AI，但培训本身不建立信心，关键是找到内部 AI  champion，1/3 酒店已有此人<sup class="refmark"><a href="#ref-7" id="cite-7">[7]</a></sup>。锦江的&quot;人人都是开发者&quot;实践让一线员工用 AI 工具解决本岗问题，客诉、行李、食材质检等应用由员工自发搭建<sup class="refmark"><a href="#ref-20" id="cite-20">[20]</a></sup>。</p>
+<p><strong>商业模式</strong>：AI 正在改变酒店与 OTA 的权力结构——Google AI Mode 让酒店/OTA 成为记录商户但失去客户旅程可见性<sup class="refmark"><a href="#ref-41" id="cite-41">[41]</a></sup>；BCG 判断未来竞争围绕数据资产、算法能力与智能运营体系展开，而非物业规模或品牌知名度<sup class="refmark"><a href="#ref-35" id="cite-35">[35]</a></sup>。</p>
+<h1 id="h-28-07-监管-法规-标准与风险-哪些约束决定-ai-能做到什么程度">07 监管、法规、标准与风险：哪些约束决定 AI 能做到什么程度</h1>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Constraint</th>
+<th>影响什么业务/风险</th>
+<th>System Requirement</th>
+<th>Human Gate</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>反垄断法（Sherman Act §1）</td>
+<td>算法定价可能被认定为合谋；酒店间通过同一算法交换非公开价格/入住数据</td>
+<td>算法决策日志、价格建议采纳率记录、数据隔离、独立定价证据</td>
+<td>定价策略由收益经理独立审批；避免行业统一推荐价；定期反垄断合规审查<sup class="refmark"><a href="#ref-27" id="cite-27">[27]</a></sup></td>
+</tr>
+<tr>
+<td>EU AI Act 第 50 条（透明度）</td>
+<td>聊天机器人、虚拟礼宾、AI 生成营销内容</td>
+<td>首次交互时明确披露 AI 身份；AI 生成图像/视频标注</td>
+<td>部署方（酒店）负责披露；供应商提供默认披露能力<sup class="refmark"><a href="#ref-50" id="cite-50">[50]</a></sup></td>
+</tr>
+<tr>
+<td>EU AI Act 附件 III 第 4 类（高风险：员工排班）</td>
+<td>AI 驱动排班、绩效评估、招聘筛选</td>
+<td>风险管理体系、数据治理、技术文档、日志、员工透明、人工监督、 conformity assessment、EU 数据库注册（2026-08-02 起）</td>
+<td>排班决策可复核、可推翻；工会共决权<sup class="refmark"><a href="#ref-49" id="cite-49">[49]</a></sup></td>
+</tr>
+<tr>
+<td>EU AI Act 附件 III 第 1 类（高风险：生物识别）</td>
+<td>人脸识别入住</td>
+<td>明确同意、DPIA、技术文档、 conformity assessment、CE 标记、非生物识别替代通道</td>
+<td>客人可选择非人脸入住；人工核验兜底<sup class="refmark"><a href="#ref-49" id="cite-49">[49]</a></sup></td>
+</tr>
+<tr>
+<td>EU AI Act 第 5 条（禁止）</td>
+<td>情绪识别、生物特征分类</td>
+<td>2025-02 起禁止</td>
+<td>不得部署<sup class="refmark"><a href="#ref-49" id="cite-49">[49]</a></sup></td>
+</tr>
+<tr>
+<td>GDPR 第 22 条</td>
+<td>自动化决策对客人产生重大影响（定价、升级、服务准入）</td>
+<td>人工复核通道、数据最小化、目的限制</td>
+<td>客人有权要求人工干预<sup class="refmark"><a href="#ref-49" id="cite-49">[49]</a></sup></td>
+</tr>
+<tr>
+<td>数据隐私与保密</td>
+<td>客人个人信息、支付数据、会员数据进入 AI 工具</td>
+<td>IAM、数据边界、留存策略、供应商合同 AI 条款</td>
+<td>敏感数据接入审批；影子 AI 治理<sup class="refmark"><a href="#ref-50" id="cite-50">[50]</a></sup></td>
+</tr>
+<tr>
+<td>职业责任与品牌标准</td>
+<td>AI 错误回答、错误定价、服务失败</td>
+<td>知识库版本控制、引用溯源、人工抽检、回滚机制</td>
+<td>投诉/赔偿/公关危机人工接管<sup class="refmark"><a href="#ref-7" id="cite-7">[7]</a></sup><sup class="refmark"><a href="#ref-34" id="cite-34">[34]</a></sup></td>
+</tr>
+<tr>
+<td>算法公平与价格歧视</td>
+<td>动态定价可能对特定群体不公平</td>
+<td>价格逻辑文档化、公平性测试、可解释性</td>
+<td>定期审查；异常价格人工复核<sup class="refmark"><a href="#ref-49" id="cite-49">[49]</a></sup><sup class="refmark"><a href="#ref-17" id="cite-17">[17]</a></sup></td>
+</tr>
+</tbody></table>
+</div><p><strong>核心映射逻辑</strong>：监管越靠近&quot;对人的重大决策&quot;（排班、生物识别、定价歧视），系统要求越重、人工门禁越硬；越靠近&quot;信息性/辅助性&quot;（聊天机器人、内容生成），要求越轻、但透明度义务不可省。</p>
+<h1 id="h-29-08-ai-能自动到什么程度-自主边界与人工接管">08 AI 能自动到什么程度：自主边界与人工接管</h1>
+<p>统一 L0–L5：L0 信息助手、L1 Copilot、L2 任务代理、L3 工作流代理、L4 闭环/多智能体、L5 自主领域系统。</p>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>场景</th>
+<th>技术可实现等级</th>
+<th>推荐自主等级</th>
+<th>Human Gate</th>
+<th>Failure Detection</th>
+<th>错误可恢复性</th>
+<th>监管/风险上限</th>
+<th>升级条件</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>住中服务（送物/续住/开票）</td>
+<td>L3</td>
+<td><strong>L3</strong></td>
+<td>投诉、赔偿、VIP 转人工</td>
+<td>工单异常、准确率监控、住客反馈</td>
+<td>高（可补送、可更正）</td>
+<td>低（透明度披露）</td>
+<td>准确率稳定 95%+、异常率低于阈值、跨系统工单闭环率提升</td>
+</tr>
+<tr>
+<td>语音客服/前台</td>
+<td>L3</td>
+<td><strong>L2–L3</strong></td>
+<td>支付争议、投诉、VIP 转人工</td>
+<td>通话质检、意图识别置信度、转人工率</td>
+<td>高（可回拨、可更正）</td>
+<td>中（录音合规、披露）</td>
+<td>转人工率下降、CSAT 稳定、复杂变更成功率提升</td>
+</tr>
+<tr>
+<td>收益管理定价</td>
+<td>L3–L4</td>
+<td><strong>L2–L3</strong></td>
+<td>超出价格带、重大活动、业主审批</td>
+<td>预测偏差监控、竞品异常、价格一致性</td>
+<td>中（可调回，但已售房不可逆）</td>
+<td>高（反垄断、价格歧视、EU 透明度）</td>
+<td>信任度提升（10%→30%+）、预测准确率稳定、合规审查通过</td>
+</tr>
+<tr>
+<td>排班与人力</td>
+<td>L3</td>
+<td><strong>L2–L3</strong></td>
+<td>加班、合同例外、员工申诉</td>
+<td>工时合规校验、员工反馈、缺口监控</td>
+<td>高（可调班）</td>
+<td>高（EU 高风险、工会共决）</td>
+<td>合规文档完备、员工接受度提升、预测准确率稳定</td>
+</tr>
+<tr>
+<td>分销代理预订</td>
+<td>L2–L3</td>
+<td><strong>L2</strong></td>
+<td>旅客确认房型/条款/支付；酒店异常订单复核</td>
+<td>价格/库存一致性、代理抓取成功率</td>
+<td>中（可取消/改订）</td>
+<td>中（消费者保护、数据回传限制）</td>
+<td>代理成功率提升、直订占比不降、会员价识别准确</td>
+</tr>
+<tr>
+<td>经营参谋/数字店长</td>
+<td>L2–L3</td>
+<td><strong>L2</strong></td>
+<td>具体经营决策由商家作出</td>
+<td>建议采纳率、经营结果复盘</td>
+<td>高（建议可拒绝）</td>
+<td>低–中</td>
+<td>建议采纳率与经营改善相关性验证</td>
+</tr>
+<tr>
+<td>客房清洁/机器人</td>
+<td>L3</td>
+<td><strong>L3</strong></td>
+<td>异常房态、设备故障、投诉</td>
+<td>任务完成率、清洁抽检、机器人状态</td>
+<td>高（可重做）</td>
+<td>低</td>
+<td>任务完成率稳定、故障率下降、单房成本下降</td>
+</tr>
+<tr>
+<td>财务/采购</td>
+<td>L3</td>
+<td><strong>L2–L3</strong></td>
+<td>异常发票、超限采购、供应商切换</td>
+<td>三单匹配、异常率、审计轨迹</td>
+<td>高（可冲销）</td>
+<td>中（审计、税务）</td>
+<td>无纸化率提升、异常处理时长下降、审计通过</td>
+</tr>
+</tbody></table>
+</div><p><strong>核心原则</strong>：Can Automate ≠ Should Automate。住中服务与机器人可到 L3；定价与排班受监管与信任约束，推荐 L2–L3 并保留硬门禁；分销代理受消费者确认与平台规则约束，推荐 L2；经营参谋定位 L2，决策权留在商家。</p>
+<h1 id="h-30-09-kpi-经济性与落地-怎么判断值不值-怎么实施">09 KPI、经济性与落地：怎么判断值不值、怎么实施</h1>
+<h2 id="h-31-kpi-体系">KPI 体系</h2>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>KPI 族</th>
+<th>酒店业具体指标</th>
+<th>对应判断</th>
+<th>证据</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Time</td>
+<td>首次响应时长、入住时长、退房打扫及时率、发票处理周期</td>
+<td>J1、J5</td>
+<td>华住 5 秒响应<sup class="refmark"><a href="#ref-26" id="cite-26">[26]</a></sup>；排班样本 85%→98%<sup class="refmark"><a href="#ref-28" id="cite-28">[28]</a></sup></td>
+</tr>
+<tr>
+<td>Quality</td>
+<td>问答准确率、预测准确率、客诉处理时长、差评率、点评分</td>
+<td>J1、J2</td>
+<td>华住 95% 准确率<sup class="refmark"><a href="#ref-26" id="cite-26">[26]</a></sup>；锦江客诉时长 -80%、差评 -45%<sup class="refmark"><a href="#ref-20" id="cite-20">[20]</a></sup></td>
+</tr>
+<tr>
+<td>Capacity</td>
+<td>自动处理率、AI 自主接听率、每员工管理房量、机器人任务量</td>
+<td>J1、J5</td>
+<td>华住 73%<sup class="refmark"><a href="#ref-26" id="cite-26">[26]</a></sup>；锦江 70%<sup class="refmark"><a href="#ref-20" id="cite-20">[20]</a></sup>；云迹任务量 +25–30%<sup class="refmark"><a href="#ref-13" id="cite-13">[13]</a></sup></td>
+</tr>
+<tr>
+<td>Economics</td>
+<td>RevPAR、ADR、GOPPAR、人工成本率、人房比、每任务成本</td>
+<td>J2、J6</td>
+<td>Duetto +28.44%<sup class="refmark"><a href="#ref-21" id="cite-21">[21]</a></sup>；IDeaS +14.86%<sup class="refmark"><a href="#ref-34" id="cite-34">[34]</a></sup>；人工成本率 34.48%<sup class="refmark"><a href="#ref-28" id="cite-28">[28]</a></sup></td>
+</tr>
+<tr>
+<td>Risk</td>
+<td>投诉率、价格一致性违规、合规事件、人工接管率</td>
+<td>J7</td>
+<td>反垄断诉讼<sup class="refmark"><a href="#ref-27" id="cite-27">[27]</a></sup>；EU AI Act<sup class="refmark"><a href="#ref-49" id="cite-49">[49]</a></sup></td>
+</tr>
+<tr>
+<td>Adoption</td>
+<td>日活使用率、门店覆盖率、员工使用率、建议采纳率</td>
+<td>J1、J5</td>
+<td>华住 94% 日使用率<sup class="refmark"><a href="#ref-26" id="cite-26">[26]</a></sup>；美团 14 万商家<sup class="refmark"><a href="#ref-42" id="cite-42">[42]</a></sup></td>
+</tr>
+</tbody></table>
+</div><h2 id="h-32-economics">Economics</h2>
+<ul>
+<li><strong>单点可证</strong>：RMS 案例显示 RevPAR 提升 14–28%、收益团队每月节省 20–30 小时<sup class="refmark"><a href="#ref-21" id="cite-21">[21]</a></sup><sup class="refmark"><a href="#ref-34" id="cite-34">[34]</a></sup><sup class="refmark"><a href="#ref-7" id="cite-7">[7]</a></sup>；住中服务显示 73% 自动处理、5 秒响应<sup class="refmark"><a href="#ref-26" id="cite-26">[26]</a></sup>；排班样本显示人力成本下降 12%、退房及时率提升至 98%<sup class="refmark"><a href="#ref-28" id="cite-28">[28]</a></sup>。</li>
+<li><strong>整体待证</strong>：仅 24% 酒店公司领导者表示 AI 投资已整体回本，28% 表示为时过早<sup class="refmark"><a href="#ref-6" id="cite-6">[6]</a></sup>；BCG 预计 AI 领先者收入增长 6–13%、运营成本下降 6–13%、营业利润率提升 15–30%，但这是&quot;领先者&quot;而非行业平均<sup class="refmark"><a href="#ref-35" id="cite-35">[35]</a></sup>。</li>
+<li><strong>成本结构</strong>：人力成本占营收 25–40%、年涨约 5%<sup class="refmark"><a href="#ref-28" id="cite-28">[28]</a></sup>；OTA 贡献约 40% 订单并压缩利润<sup class="refmark"><a href="#ref-35" id="cite-35">[35]</a></sup>；集成与数据治理是隐性成本大头<sup class="refmark"><a href="#ref-6" id="cite-6">[6]</a></sup><sup class="refmark"><a href="#ref-7" id="cite-7">[7]</a></sup>。</li>
+</ul>
+<h2 id="h-33-优先级与-tool-selection">优先级与 Tool Selection</h2>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>优先级</th>
+<th>场景</th>
+<th>理由</th>
+<th>适合对象</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>P0</td>
+<td>住中服务智能体</td>
+<td>证据最硬、ROI 路径清晰、风险低</td>
+<td>连锁集团、中大型单体</td>
+</tr>
+<tr>
+<td>P0</td>
+<td>RMS/动态定价</td>
+<td>价值最大、产品成熟</td>
+<td>有收益管理基础的单体与集团</td>
+</tr>
+<tr>
+<td>P1</td>
+<td>语音客服/前台</td>
+<td>解决 40% 来电未接痛点</td>
+<td>中大型酒店、呼叫量大的门店</td>
+</tr>
+<tr>
+<td>P1</td>
+<td>排班与人力优化</td>
+<td>人力成本刚性、ROI 可测算</td>
+<td>人力密集的中端与经济型</td>
+</tr>
+<tr>
+<td>P2</td>
+<td>分销代理适配</td>
+<td>入口变化快、但回报不确定</td>
+<td>有直订战略的连锁与品牌</td>
+</tr>
+<tr>
+<td>P2</td>
+<td>经营参谋/数字店长</td>
+<td>中小酒店普惠价值大、决策权保留</td>
+<td>中小单体、缺收益团队的门店</td>
+</tr>
+<tr>
+<td>P3</td>
+<td>财务/采购自动化</td>
+<td>低调但可量化</td>
+<td>有 ERP 基础的集团</td>
+</tr>
+</tbody></table>
+</div><h2 id="h-34-poc-pilot-scale-gate">PoC / Pilot / Scale Gate</h2>
+<p><strong>PoC（4–6 周）</strong>：选单一场景（如住中送物、点评回复、预抵邮件），设定明确护栏，跟踪响应时长、准确率、CSAT、员工节省时间<sup class="refmark"><a href="#ref-7" id="cite-7">[7]</a></sup>。<strong>Pilot（3–6 个月）</strong>：扩展到 3–5 家门店，验证跨系统集成、异常处理、人工接管率；建立 AI 工作小组与内部 champion<sup class="refmark"><a href="#ref-7" id="cite-7">[7]</a></sup>。<strong>Scale Gate</strong>：准确率稳定 95%+、异常率低于阈值、单店经济性为正、合规审查通过、员工接受度达标，才进入规模化<sup class="refmark"><a href="#ref-6" id="cite-6">[6]</a></sup><sup class="refmark"><a href="#ref-7" id="cite-7">[7]</a></sup>。</p>
+<p><strong>实施路径</strong>：先修数据（PMS 开放 API、客史清洗、渠道一致性）→ 再选场景（从重复性高、风险低的住中/点评/预抵开始）→ 建治理（AI 政策、影子 AI 管控、供应商合同 AI 条款）→ 找 champion（不是技术专家，而是懂业务、有好奇心的内部人）→ 逐步扩权（L1→L2→L3，每级设门禁）<sup class="refmark"><a href="#ref-7" id="cite-7">[7]</a></sup><sup class="refmark"><a href="#ref-50" id="cite-50">[50]</a></sup>。</p>
+<h1 id="h-35-final-最终判断-哪些核心结论最终成立">Final 最终判断：哪些核心结论最终成立</h1>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>判断</th>
+<th>最终状态</th>
+<th>依据</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>J1 住中服务自动化</td>
+<td><strong>已验证 / 强证据</strong></td>
+<td>华住万店、180 万任务、73% 自动处理、95% 准确率<sup class="refmark"><a href="#ref-26" id="cite-26">[26]</a></sup>；锦江 2800+ 店、70% 自主接听<sup class="refmark"><a href="#ref-20" id="cite-20">[20]</a></sup></td>
+</tr>
+<tr>
+<td>J2 收益管理信任赤字</td>
+<td><strong>已验证 / 强证据（信任缺口）</strong></td>
+<td>53% 使用 vs 10% 完全信任<sup class="refmark"><a href="#ref-5" id="cite-5">[5]</a></sup>；AI 与利润关系学术上仍存争议<sup class="refmark"><a href="#ref-3" id="cite-3">[3]</a></sup></td>
+</tr>
+<tr>
+<td>J3 系统可达性瓶颈</td>
+<td><strong>已验证 / 强证据</strong></td>
+<td>67% 障碍来自集成/数据、仅 8% 模型限制<sup class="refmark"><a href="#ref-6" id="cite-6">[6]</a></sup>；碎片化技术栈为最大限制<sup class="refmark"><a href="#ref-7" id="cite-7">[7]</a></sup></td>
+</tr>
+<tr>
+<td>J4 分销代理化</td>
+<td><strong>趋势判断 / 中等证据</strong></td>
+<td>Google AI Mode 上线<sup class="refmark"><a href="#ref-41" id="cite-41">[41]</a></sup>，但代理抓取失败<sup class="refmark"><a href="#ref-12" id="cite-12">[12]</a></sup>、规模化效果未披露</td>
+</tr>
+<tr>
+<td>J5 组织职能上收</td>
+<td><strong>趋势判断 / 中等证据</strong></td>
+<td>19% 公司角色重定义 vs 4% 一线<sup class="refmark"><a href="#ref-6" id="cite-6">[6]</a></sup>；行业观察与高管预判<sup class="refmark"><a href="#ref-56" id="cite-56">[56]</a></sup>，但中国样本有限</td>
+</tr>
+<tr>
+<td>J6 经济性局部可证</td>
+<td><strong>趋势判断 / 中等证据</strong></td>
+<td>单点案例充分<sup class="refmark"><a href="#ref-21" id="cite-21">[21]</a></sup><sup class="refmark"><a href="#ref-34" id="cite-34">[34]</a></sup><sup class="refmark"><a href="#ref-26" id="cite-26">[26]</a></sup>，但仅 24% 整体回本<sup class="refmark"><a href="#ref-6" id="cite-6">[6]</a></sup></td>
+</tr>
+<tr>
+<td>J7 监管硬边界</td>
+<td><strong>已验证 / 强证据（法规与判例）</strong></td>
+<td>反垄断诉讼恢复<sup class="refmark"><a href="#ref-27" id="cite-27">[27]</a></sup>；EU AI Act 高风险分类与透明度义务<sup class="refmark"><a href="#ref-49" id="cite-49">[49]</a></sup><sup class="refmark"><a href="#ref-50" id="cite-50">[50]</a></sup></td>
+</tr>
+</tbody></table>
+</div><p><strong>最终一句话</strong>：酒店业的 AI 已经跨过&quot;要不要用&quot;的门槛，进入&quot;用在哪、敢放多少权、怎么证明值&quot;的阶段。住中服务与机器人是当前最扎实的生产级证据；收益管理价值最大但信任与合规约束最紧；分销代理化是最大变量但尚未定型；组织级 ROI 与人力结构变化仍在早期。<strong>AI 不会先替代酒店人，但会先替代&quot;没有 AI 协作能力的酒店人&quot;的工作方式。</strong></p>
+<h1 id="h-36-附录-judgment-traceability-matrix">附录：Judgment Traceability Matrix</h1>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Judgment</th>
+<th>Process</th>
+<th>AI Capability</th>
+<th>Scenario</th>
+<th>Evidence</th>
+<th>KPI</th>
+<th>Boundary</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>J1</td>
+<td>住中服务、入住前台</td>
+<td>Workflow Orchestration、Tool Use、Multimodal</td>
+<td>住中智能体、语音客服、机器人</td>
+<td><sup class="refmark"><a href="#ref-26" id="cite-26">[26]</a></sup><sup class="refmark"><a href="#ref-20" id="cite-20">[20]</a></sup><sup class="refmark"><a href="#ref-13" id="cite-13">[13]</a></sup></td>
+<td>响应时长、自动处理率、任务量</td>
+<td>投诉/VIP 转人工；准确率阈值</td>
+</tr>
+<tr>
+<td>J2</td>
+<td>需求预测、定价库存</td>
+<td>Prediction、Optimization、Simulation</td>
+<td>RMS、动态定价</td>
+<td><sup class="refmark"><a href="#ref-5" id="cite-5">[5]</a></sup><sup class="refmark"><a href="#ref-7" id="cite-7">[7]</a></sup><sup class="refmark"><a href="#ref-21" id="cite-21">[21]</a></sup><sup class="refmark"><a href="#ref-34" id="cite-34">[34]</a></sup><sup class="refmark"><a href="#ref-3" id="cite-3">[3]</a></sup></td>
+<td>RevPAR、ADR、预测准确率</td>
+<td>价格带授权；反垄断；信任</td>
+</tr>
+<tr>
+<td>J3</td>
+<td>全流程</td>
+<td>Tool Use、Workflow Orchestration、Knowledge</td>
+<td>系统集成、数据治理</td>
+<td><sup class="refmark"><a href="#ref-6" id="cite-6">[6]</a></sup><sup class="refmark"><a href="#ref-7" id="cite-7">[7]</a></sup></td>
+<td>集成周期、数据就绪度</td>
+<td>遗留系统；API 开放度</td>
+</tr>
+<tr>
+<td>J4</td>
+<td>分销预订</td>
+<td>Tool Use、Generation、Research</td>
+<td>Google AI Mode、代理预订</td>
+<td><sup class="refmark"><a href="#ref-41" id="cite-41">[41]</a></sup><sup class="refmark"><a href="#ref-12" id="cite-12">[12]</a></sup><sup class="refmark"><a href="#ref-35" id="cite-35">[35]</a></sup></td>
+<td>直订占比、AI 渠道预订量</td>
+<td>平台规则；消费者确认；数据回传</td>
+</tr>
+<tr>
+<td>J5</td>
+<td>排班人力、财务采购、收益</td>
+<td>Optimization、Workflow Orchestration</td>
+<td>数字店长、AI 中台、排班</td>
+<td><sup class="refmark"><a href="#ref-6" id="cite-6">[6]</a></sup><sup class="refmark"><a href="#ref-56" id="cite-56">[56]</a></sup><sup class="refmark"><a href="#ref-20" id="cite-20">[20]</a></sup><sup class="refmark"><a href="#ref-28" id="cite-28">[28]</a></sup></td>
+<td>人房比、管理跨度、员工技能</td>
+<td>工会共决；EU 高风险</td>
+</tr>
+<tr>
+<td>J6</td>
+<td>全流程</td>
+<td>组合能力</td>
+<td>单点 ROI、组织 ROI</td>
+<td><sup class="refmark"><a href="#ref-6" id="cite-6">[6]</a></sup><sup class="refmark"><a href="#ref-7" id="cite-7">[7]</a></sup><sup class="refmark"><a href="#ref-21" id="cite-21">[21]</a></sup><sup class="refmark"><a href="#ref-34" id="cite-34">[34]</a></sup><sup class="refmark"><a href="#ref-35" id="cite-35">[35]</a></sup></td>
+<td>投资回收期、GOPPAR</td>
+<td>集成成本；变革管理</td>
+</tr>
+<tr>
+<td>J7</td>
+<td>定价库存、排班人力</td>
+<td>Optimization、Prediction</td>
+<td>算法定价、AI 排班、聊天机器人</td>
+<td><sup class="refmark"><a href="#ref-27" id="cite-27">[27]</a></sup><sup class="refmark"><a href="#ref-49" id="cite-49">[49]</a></sup><sup class="refmark"><a href="#ref-50" id="cite-50">[50]</a></sup></td>
+<td>合规成本、人工复核比例</td>
+<td>反垄断；EU AI Act；GDPR</td>
+</tr>
+</tbody></table>
+</div><h1 id="h-37-参考来源">参考来源</h1>
+<p><a class="refback" id="ref-1" href="#cite-1">[1]</a> 酒店AI客服怎么选？从&quot;单点工具&quot;到&quot;全场景智能体&quot;，苏适酒店给出新答案 — <a href="https://news.qq.com/rain/a/20260228A01SNB00">https://news.qq.com/rain/a/20260228A01SNB00</a></p>
+<p><a class="refback" id="ref-2" href="#cite-2">[2]</a> 人工智能驱动的预测分析：利用数据智能改变酒店业 — <a href="https://www.qianjia.com/html/2025-04/16_415364.html">https://www.qianjia.com/html/2025-04/16_415364.html</a></p>
+<p><a class="refback" id="ref-3" href="#cite-3">[3]</a> Hotel demand forecasting models and methods using artificial intelligence: A systematic literature review — <a href="https://doi.org/10.18089/tms.20240304">https://doi.org/10.18089/tms.20240304</a></p>
+<p><a class="refback" id="ref-4" href="#cite-4">[4]</a> Crafting an organizational strategy for the new era: a qualitative study of artificial intelligence transformation in a homegrown Singaporean hotel chain — <a href="https://doi.org/10.1108/bpmj-11-2024-1086">https://doi.org/10.1108/bpmj-11-2024-1086</a></p>
+<p><a class="refback" id="ref-5" href="#cite-5">[5]</a> Revenue Management in Hospitality: 2026 Survey of 450 Hotels — <a href="https://roompricegenie.com/hotel-revenue-management-2026-survey-findings/">https://roompricegenie.com/hotel-revenue-management-2026-survey-findings/</a></p>
+<p><a class="refback" id="ref-6" href="#cite-6">[6]</a> The State of AI in the Hotel Industry | Fall 2026 Research — <a href="https://stateofhotelai.com/">https://stateofhotelai.com/</a></p>
+<p><a class="refback" id="ref-7" href="#cite-7">[7]</a> What AI-Ready Actually Means for Your Hotel in 2026 | Mews — <a href="https://www.mews.com/en/blog/what-does-ai-ready-actually-mean-for-your-hotel-in-2026">https://www.mews.com/en/blog/what-does-ai-ready-actually-mean-for-your-hotel-in-2026</a></p>
+<p><a class="refback" id="ref-8" href="#cite-8">[8]</a> Delivering Top Results For Graduate Hotels — <a href="https://hoteltechreport.com/success-stories/revenue-management/duetto/graduate-hotels">https://hoteltechreport.com/success-stories/revenue-management/duetto/graduate-hotels</a></p>
+<p><a class="refback" id="ref-9" href="#cite-9">[9]</a> Hôtel Swexan drives exceptional RevPAR growth with Duetto — <a href="https://www.duettocloud.com/en-us/success-stories/hotel-swexan-drives-exceptional-revpar-growth-with-duetto">https://www.duettocloud.com/en-us/success-stories/hotel-swexan-drives-exceptional-revpar-growth-with-duetto</a></p>
+<p><a class="refback" id="ref-10" href="#cite-10">[10]</a> 云迹科技前九个月机器人覆盖超4.5万家酒店 HDOS客户超5000家 — <a href="https://www.guandian.cn/m/show/614124">https://www.guandian.cn/m/show/614124</a></p>
+<p><a class="refback" id="ref-11" href="#cite-11">[11]</a> Hotel AI enters through the back door of chain hotels — <a href="https://hospitality-on.com/en/hospitality/hotel-ai-enters-through-back-door-chain-hotels">https://hospitality-on.com/en/hospitality/hotel-ai-enters-through-back-door-chain-hotels</a></p>
+<p><a class="refback" id="ref-12" href="#cite-12">[12]</a> Hilton Isn&#39;t &#39;Blocking&#39; New AI Agents. But They Can&#39;t Always Get In. — <a href="https://skift.com/2026/10/02/hilton-isnt-blocking-new-ai-agents-but-its-not-always-letting-them-in/">https://skift.com/2026/10/02/hilton-isnt-blocking-new-ai-agents-but-its-not-always-letting-them-in/</a></p>
+<p><a class="refback" id="ref-13" href="#cite-13">[13]</a> 云迹科技前九个月机器人覆盖超4.5万家酒店 HDOS客户超5000家 — <a href="https://www.guandian.cn/m/show/614124">https://www.guandian.cn/m/show/614124</a></p>
+<p><a class="refback" id="ref-14" href="#cite-14">[14]</a> AI 数字店长、美团既白、千问订房…2026 酒店 AI 大战，谁在真正创造价值？ — <a href="https://www.sohu.com/a/1025156573_121479694">https://www.sohu.com/a/1025156573_121479694</a></p>
+<p><a class="refback" id="ref-15" href="#cite-15">[15]</a> Amanta Hotels &amp; Residencies goes from manual spreadsheets to 30%+ RevPAR with Duetto — <a href="https://hoteltechreport.com/success-stories/revenue-management/duetto/amanta-hotels-residencies">https://hoteltechreport.com/success-stories/revenue-management/duetto/amanta-hotels-residencies</a></p>
+<p><a class="refback" id="ref-16" href="#cite-16">[16]</a> Dynamic staff scheduling optimization algorithm for hotel management - PMC — <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC13470400/">https://pmc.ncbi.nlm.nih.gov/articles/PMC13470400/</a></p>
+<p><a class="refback" id="ref-17" href="#cite-17">[17]</a> A Two-Stage Deep Reinforcement Learning-Driven Dynamic Discriminatory Pricing Model for Hotel Rooms with Fairness Constraints — <a href="https://doi.org/10.3390/jtaer20040337">https://doi.org/10.3390/jtaer20040337</a></p>
+<p><a class="refback" id="ref-18" href="#cite-18">[18]</a> 华住、腾讯联合推出酒店智能体&quot;华小AI&quot; 已覆盖3200余家门店 — <a href="https://finance.sina.com.cn/stock/estate/integration/2026-03-02/doc-inhpqknr1450854.shtml">https://finance.sina.com.cn/stock/estate/integration/2026-03-02/doc-inhpqknr1450854.shtml</a></p>
+<p><a class="refback" id="ref-19" href="#cite-19">[19]</a> 华住携手腾讯云打造AI住中服务&quot;超级团队&quot; 实现万店规模化落地 — <a href="https://xueqiu.com/S/01179/392659106">https://xueqiu.com/S/01179/392659106</a></p>
+<p><a class="refback" id="ref-20" href="#cite-20">[20]</a> 万店焕新：锦江酒店落地服务业AI实践 — <a href="https://finance.sina.com.cn/wm/2026-05-29/doc-inhzqimi9426295.shtml">https://finance.sina.com.cn/wm/2026-05-29/doc-inhzqimi9426295.shtml</a></p>
+<p><a class="refback" id="ref-21" href="#cite-21">[21]</a> 28% increase in RevPAR for RIMC Hotels &amp; Resorts Group | Duetto — <a href="https://www.duettocloud.com/en-us/success-stories/duetto-drives-28-increase-in-revpar-for-rimc-hotels-resorts-group">https://www.duettocloud.com/en-us/success-stories/duetto-drives-28-increase-in-revpar-for-rimc-hotels-resorts-group</a></p>
+<p><a class="refback" id="ref-22" href="#cite-22">[22]</a> Third Circuit Revives Algorithmic Pricing Antitrust Claims Against Casino-Hotels — <a href="https://www.paulweiss.com/insights/client-memos/third-circuit-revives-algorithmic-pricing-antitrust-claims-against-casino-hotels">https://www.paulweiss.com/insights/client-memos/third-circuit-revives-algorithmic-pricing-antitrust-claims-against-casino-hotels</a></p>
+<p><a class="refback" id="ref-23" href="#cite-23">[23]</a> 华住携手腾讯云打造AI住中服务&quot;超级团队&quot; 实现万店规模化落地-经济参考网 — <a href="https://www.jjckb.cn/20260603/24b0598f265646ec8d09d5f351682b45/c.html">https://www.jjckb.cn/20260603/24b0598f265646ec8d09d5f351682b45/c.html</a></p>
+<p><a class="refback" id="ref-24" href="#cite-24">[24]</a> 《2026年中国酒店业数字化转型趋势报告——提质增效》正式发布！ — <a href="https://m.traveldaily.cn/article/189595">https://m.traveldaily.cn/article/189595</a></p>
+<p><a class="refback" id="ref-25" href="#cite-25">[25]</a> 人工成本率34.48%、人房比0.63：酒店PMS动态排班如何压降刚性人力支出 — <a href="https://www.jtepms.cn/post/230.html">https://www.jtepms.cn/post/230.html</a></p>
+<p><a class="refback" id="ref-26" href="#cite-26">[26]</a> 华住携手腾讯云打造AI住中服务&quot;超级团队&quot; 实现万店规模化落地-经济参考网 — <a href="https://www.jjckb.cn/20260603/24b0598f265646ec8d09d5f351682b45/c.html">https://www.jjckb.cn/20260603/24b0598f265646ec8d09d5f351682b45/c.html</a></p>
+<p><a class="refback" id="ref-27" href="#cite-27">[27]</a> Third Circuit Reinstates Algorithmic Pricing Antitrust Lawsuit: Cornish-Adebiyi v. Caesars Entertainment, Inc. — <a href="https://www.cov.com/en/news-and-insights/insights/2026/08/third-circuit-reinstates-algorithmic-pricing-antitrust-lawsuit-cornish-adebiyi-v-caesars-entertainment-inc">https://www.cov.com/en/news-and-insights/insights/2026/08/third-circuit-reinstates-algorithmic-pricing-antitrust-lawsuit-cornish-adebiyi-v-caesars-entertainment-inc</a></p>
+<p><a class="refback" id="ref-28" href="#cite-28">[28]</a> 人工成本率34.48%、人房比0.63：酒店PMS动态排班如何压降刚性人力支出 — <a href="https://www.jtepms.cn/post/230.html">https://www.jtepms.cn/post/230.html</a></p>
+<p><a class="refback" id="ref-29" href="#cite-29">[29]</a> Rethinking human–AI agency in tourism and hospitality: A framework for the agentic AI era — <a href="https://doi.org/10.1016/j.tourman.2026.105557">https://doi.org/10.1016/j.tourman.2026.105557</a></p>
+<p><a class="refback" id="ref-30" href="#cite-30">[30]</a> Economic impact of artificial intelligence (AI): Conceptualization of business value of AI and future agenda for tourism and hospitality research — <a href="https://doi.org/10.1177/13548166261418787">https://doi.org/10.1177/13548166261418787</a></p>
+<p><a class="refback" id="ref-31" href="#cite-31">[31]</a> EU AI Act for Hospitality: Hotel Compliance Guide 2026 — <a href="https://compound.law/en-DE/ai-act/hospitality/">https://compound.law/en-DE/ai-act/hospitality/</a></p>
+<p><a class="refback" id="ref-32" href="#cite-32">[32]</a> Revenue Management Won&#39;t Be a Job Anymore — <a href="https://pricepoint.co/blog/revenue-management-wont-be-a-job-anymore-and-thats-a-good-thing">https://pricepoint.co/blog/revenue-management-wont-be-a-job-anymore-and-thats-a-good-thing</a></p>
+<p><a class="refback" id="ref-33" href="#cite-33">[33]</a> 82% of Hotels Now Use AI — What the Other 18% Miss — <a href="https://otelciro.com/en/resources/blog/hotel-ai-adoption-82-percent-2026">https://otelciro.com/en/resources/blog/hotel-ai-adoption-82-percent-2026</a></p>
+<p><a class="refback" id="ref-34" href="#cite-34">[34]</a> AI in Hospitality: What Works in 2026 (With Data) | TeaCode — <a href="https://www.teacode.io/blog/ai-in-hospitality-guest-experience">https://www.teacode.io/blog/ai-in-hospitality-guest-experience</a></p>
+<p><a class="refback" id="ref-35" href="#cite-35">[35]</a> AI重塑酒店业：智能化转型迈入价值兑现阶段 — <a href="https://finance.sina.com.cn/tech/roll/2026-09-01/doc-iniqhfqh4800773.shtml">https://finance.sina.com.cn/tech/roll/2026-09-01/doc-iniqhfqh4800773.shtml</a></p>
+<p><a class="refback" id="ref-36" href="#cite-36">[36]</a> AI不是酒旅&quot;救命稻草&quot;，但2026年没它不行 — <a href="https://finance.sina.com.cn/jjxw/2026-01-16/doc-inhhnqpa0767665.shtml">https://finance.sina.com.cn/jjxw/2026-01-16/doc-inhhnqpa0767665.shtml</a></p>
+<p><a class="refback" id="ref-37" href="#cite-37">[37]</a> Google&#39;s Agentic Hotel Booking Tool Comes to AI Mode — <a href="https://skift.com/2026/08/27/googles-agentic-hotel-booking-tool-comes-to-ai-mode/">https://skift.com/2026/08/27/googles-agentic-hotel-booking-tool-comes-to-ai-mode/</a></p>
+<p><a class="refback" id="ref-38" href="#cite-38">[38]</a> Rising Cost, Staffing Challenges Persist for Hotels as Travel Demand Expected to Hold Steady | AHLA — <a href="https://www.ahla.com/news/rising-cost-staffing-challenges-persist-hotels-travel-demand-expected-hold-steady">https://www.ahla.com/news/rising-cost-staffing-challenges-persist-hotels-travel-demand-expected-hold-steady</a></p>
+<p><a class="refback" id="ref-39" href="#cite-39">[39]</a> Case Studies | IDeaS Client Success Stories — <a href="https://ideas.com/client-success/">https://ideas.com/client-success/</a></p>
+<p><a class="refback" id="ref-40" href="#cite-40">[40]</a> 美团发布既白旗舰版 酒店AI由提效助手转向经营参谋 — <a href="http://stock.10jqka.com.cn/20260925/c680283701.shtml">http://stock.10jqka.com.cn/20260925/c680283701.shtml</a></p>
+<p><a class="refback" id="ref-41" href="#cite-41">[41]</a> Google&#39;s Agentic Hotel Booking Tool Comes to AI Mode — <a href="https://skift.com/2026/08/27/googles-agentic-hotel-booking-tool-comes-to-ai-mode/">https://skift.com/2026/08/27/googles-agentic-hotel-booking-tool-comes-to-ai-mode/</a></p>
+<p><a class="refback" id="ref-42" href="#cite-42">[42]</a> 懂行业、能干活、拿结果，美团酒店AI既白已为10余万商家提供经营参谋 — <a href="https://www.163.com/dy/article/L82GGFMB0519U3I5.html">https://www.163.com/dy/article/L82GGFMB0519U3I5.html</a></p>
+<p><a class="refback" id="ref-43" href="#cite-43">[43]</a> Rising Cost, Staffing Challenges Persist for Hotels as Travel Demand Expected to Hold Steady | AHLA — <a href="https://www.ahla.com/news/rising-cost-staffing-challenges-persist-hotels-travel-demand-expected-hold-steady">https://www.ahla.com/news/rising-cost-staffing-challenges-persist-hotels-travel-demand-expected-hold-steady</a></p>
+<p><a class="refback" id="ref-44" href="#cite-44">[44]</a> Case Studies | IDeaS Client Success Stories — <a href="https://ideas.com/client-success/">https://ideas.com/client-success/</a></p>
+<p><a class="refback" id="ref-45" href="#cite-45">[45]</a> Responsible AI adoption in hospitality: a maturity-based analysis of value, risk and governance — <a href="https://doi.org/10.1080/22243534.2026.2726013">https://doi.org/10.1080/22243534.2026.2726013</a></p>
+<p><a class="refback" id="ref-46" href="#cite-46">[46]</a> Risks and Controls for Multi-Agent Systems: an analytical framework for deployment of AI agents across organisational boundaries — <a href="https://doi.org/10.48550/arxiv.2608.26626">https://doi.org/10.48550/arxiv.2608.26626</a></p>
+<p><a class="refback" id="ref-47" href="#cite-47">[47]</a> Artificial intelligence and work design: implications for frontline service employees and future research — <a href="https://doi.org/10.1108/josm-12-2024-0535">https://doi.org/10.1108/josm-12-2024-0535</a></p>
+<p><a class="refback" id="ref-48" href="#cite-48">[48]</a> EU AI Act for hotels: transparency obligations for hotel chatbots — <a href="https://www.hijiffy.com/resources/articles/eu-ai-act">https://www.hijiffy.com/resources/articles/eu-ai-act</a></p>
+<p><a class="refback" id="ref-49" href="#cite-49">[49]</a> EU AI Act for Hospitality: Hotel Compliance Guide 2026 — <a href="https://compound.law/en-DE/ai-act/hospitality/">https://compound.law/en-DE/ai-act/hospitality/</a></p>
+<p><a class="refback" id="ref-50" href="#cite-50">[50]</a> EU AI Act for hotels: transparency obligations for hotel chatbots — <a href="https://www.hijiffy.com/resources/articles/eu-ai-act">https://www.hijiffy.com/resources/articles/eu-ai-act</a></p>
+<p><a class="refback" id="ref-51" href="#cite-51">[51]</a> Agentic AI in Hospitality Industry: 11 AI Agents (2026) — <a href="https://assistents.ai/blogs/agentic-ai-in-hospitality-industry-2026">https://assistents.ai/blogs/agentic-ai-in-hospitality-industry-2026</a></p>
+<p><a class="refback" id="ref-52" href="#cite-52">[52]</a> 2026年中国酒店业八大发展趋势 — <a href="https://www.sohu.com/a/992916763_121218361">https://www.sohu.com/a/992916763_121218361</a></p>
+<p><a class="refback" id="ref-53" href="#cite-53">[53]</a> AI时代，一群年轻人重构酒店业&quot;大脑&quot; — <a href="http://www.news.cn/globe/20260908/2b8ba615a21c4084aa31757cb273ecb5/c.html">http://www.news.cn/globe/20260908/2b8ba615a21c4084aa31757cb273ecb5/c.html</a></p>
+<p><a class="refback" id="ref-54" href="#cite-54">[54]</a> The Human-in-the-Loop Hotel: Where AI Should Decide, Recommend and Stop — <a href="https://www.hospitalitynet.org/opinion/4135075/the-human-in-the-loop-hotel-where-ai-should-decide-recommend-and-stop">https://www.hospitalitynet.org/opinion/4135075/the-human-in-the-loop-hotel-where-ai-should-decide-recommend-and-stop</a></p>
+<p><a class="refback" id="ref-55" href="#cite-55">[55]</a> Agentic AI in Hospitality Industry: 11 AI Agents (2026) — <a href="https://assistents.ai/blogs/agentic-ai-in-hospitality-industry-2026">https://assistents.ai/blogs/agentic-ai-in-hospitality-industry-2026</a></p>
+<p><a class="refback" id="ref-56" href="#cite-56">[56]</a> 2026年中国酒店业八大发展趋势 — <a href="https://www.sohu.com/a/992916763_121218361">https://www.sohu.com/a/992916763_121218361</a></p>
+
+      <div class="runinfo">
+        <b>运行信息</b>　技能 ai-industry-deep-insight v1.5.0　·
+        生成模型 deepseek-ai/deepseek-v4.1-flash-1017　·
+        模型调用 17 次（输入 443087 / 输出 26928 / 推理 3344 tokens）　·
+        用时 336 秒<br>
+        本报告由自动化系统生成，所有事实性内容请以原文链接为准。
+        <details><summary>本次检索到的 269 个来源</summary>
+          <ol><li>doi.org/10.3390/info15060299</li><li>doi.org/10.1108/md-10-2024-2309</li><li>doi.org/10.1108/bpmj-11-2024-1086</li><li>doi.org/10.1080/10941665.2025.2555204</li><li>doi.org/10.1108/josm-12-2024-0535</li><li>doi.org/10.1108/ijchm-01-2024-0140</li><li>doi.org/10.3390/logistics10010005</li><li>doi.org/10.1108/ijsms-10-2025-376</li><li>openalex.org/w7155275550</li><li>doi.org/10.51483/ijaiml.6.2s.2026.279-287</li><li>doi.org/10.47772/ijriss.2026.100800427</li><li>doi.org/10.70382/bejasd.v13i2.068</li><li>doi.org/10.1057/s41599-025-04361-6</li><li>doi.org/10.53935/jomw.v2024i2.275</li><li>doi.org/10.32996/jcsts.2025.7.2.2</li><li>doi.org/10.18089/tms.20240304</li><li>doi.org/10.32996/jcsts.2026.5.2.4</li><li>doi.org/10.30574/gscbps.2024.26.2.0071</li><li>doi.org/10.22271/27069583.2026.v8.i1a.227</li><li>doi.org/10.5281/zenodo.18933663</li><li>doi.org/10.60078/2026-vol4-iss2-pp69-72</li><li>doi.org/10.31004/jptam.v10i2.41943</li><li>doi.org/10.1016/j.annale.2026.100227</li><li>openalex.org/w7218221855</li><li>news.qq.com/rain/a/20260228a01snb00</li><li>qianjia.com/html/2025-04/16_415364.html</li><li>finance.sina.com.cn/jjxw/2026-01-16/doc-inhhnqpa0767665.shtml</li><li>finance.sina.com.cn/tech/roll/2026-09-01/doc-iniqhfqh4800773.shtml</li><li>en.wikipedia.org/wiki/aiello_(company)</li><li>app.xinhuanet.com/news/article.html</li><li>en.wikipedia.org/wiki/2026_in_artificial_intelligence</li><li>gooduo.net/news/67</li><li>m.chinaz.com/2026/0722/1766528.shtml</li><li>hospitalitynet.org/news/4135013/more-than-half-of-hotels-use-ai-to-price-rooms-but-only-1-in-10-would-rely-on-it-for-most-decisions-roompricegenie-finds</li><li>roompricegenie.com/hotel-revenue-management-2026-survey-findings</li><li>hospitalitynet.org/explainer/4134957/ai-in-hotel-revenue-management-the-ultimate-guide</li><li>mews.com/en/blog/what-does-ai-ready-actually-mean-for-your-hotel-in-2026</li><li>guestara.com/post/hotel-ai-statistics-every-number-that-matters</li><li>mylighthouse.com/resources/blog/ai-hotel-revenue-management</li><li>rapideyeinspections.com/research/hotel-ai-adoption-statistics</li><li>tommasomariaricci.com/blog/ai-for-hospitality-industry-guide</li><li>stateofhotelai.com</li><li>hoteltechreport.com/success-stories/revenue-management/duetto/graduate-hotels</li><li>duettocloud.com/en-us/success-stories/page/5</li><li>duettocloud.com/en-us/success-stories/hotel-swexan-drives-exceptional-revpar-growth-with-duetto</li><li>duettocloud.com/en-us/who-we-help/hotels</li><li>ideas.com</li><li>revevolve.ai/blog/hotel-revenue-management-software</li><li>duettocloud.com/en-us/success-stories/wharf-hotels</li><li>letsaskclaire.com/hospitality/revenue-management-ai</li><li>superagi.com/top-10-ai-tools-transforming-revenue-management-in-the-hospitality-industry-2</li><li>hospitality-on.com/en/hospitality/hotel-ai-enters-through-back-door-chain-hotels</li><li>hospitalitynet.org/editorial/4134992/google-ai-mode-books-hotels-now-independent-hotels-lost-ad-visibility-the-same-day-independents-are-8x-more-invisible-to-ai-than-chains</li><li>teacode.io/blog/ai-in-hospitality-guest-experience</li><li>hospitalitynet.org/opinion/4134976/are-hotels-closing-their-doors-to-ai-agents</li><li>skift.com/2026/10/02/hilton-isnt-blocking-new-ai-agents-but-its-not-always-letting-them-in</li><li>whiteskyhospitality.com/how-the-worlds-biggest-hotel-chains-are-actually-using-ai</li><li>hotelnewsresource.com/article143373.html</li><li>hotel-online.com/news/are-hotels-closing-their-doors-to-ai-agents-part-2</li><li>hotelnewsresource.com/article143405.html</li><li>guandian.cn/m/show/614124</li><li>m.chinaventure.com.cn/news/80-20250403-385775.html</li><li>stock.10jqka.com.cn/20261016/c680755705.shtml</li><li>m.dzplus.dzng.com/share/general/0/news2359151rflgizpvfsmae</li><li>finance.sina.com.cn/stock/stockzmt/2025-10-04/doc-infstxva3890951.shtml</li><li>finance.sina.com.cn/stock/stockzmt/2025-03-22/doc-ineqpefr5942615.shtml</li><li>yunjichina.com.cn</li><li>taogongwei.com/news/detail/11690</li><li>hstong.com/news/detail/25032621133684340</li><li>stayntouch.com/ai-in-hotels</li><li>assistents.ai/blogs/agentic-ai-in-hospitality-industry-2026</li><li>directful.com/blog/hotels-use-ai-to-increase-direct-bookings</li><li>digitalapplied.com/blog/agentic-ai-for-hospitality-travel-marketing-vertical-2026</li><li>sysevo.io/blog/hotel-ai-booking-case-study-direct-revenue</li><li>webflow.canarytechnologies.com/post/hotel-ai-customer-service-case-studies</li><li>jugl.com/ai-agents-for-hotels-travel</li><li>ottotheagent.com/blog/hotel-ai-booking-systems-case-studies</li><li>nuplay.ai/blogs/ai-hotel-case-studies-key-use-cases</li><li>doi.org/10.1109/jiot.2024.3407119</li><li>doi.org/10.63332/joph.v5i6.2073</li><li>doi.org/10.3390/jtaer20040337</li><li>doi.org/10.3390/info16060450</li><li>doi.org/10.15388/24-infor559</li><li>doi.org/10.18267/j.aip.227</li><li>doi.org/10.5281/zenodo.20781270</li><li>doi.org/10.68159/a521932518</li><li>doi.org/10.3390/math14060929</li><li>doi.org/10.3390/sym18061046</li><li>sohu.com/a/1025156573_121479694</li><li>news.qq.com/rain/a/20260118a072le00</li><li>jiemian.com/article/13900133.html</li><li>finance.sina.com.cn/wm/2026-05-29/doc-inhzqimi9426295.shtml</li><li>weibo.com/2/detail/comos:nittzpz7957489</li><li>sina.cn/news/article/nishrau8181667.html</li><li>finance.sina.com.cn/stock/estate/integration/2026-03-02/doc-inhpqknr1450854.shtml</li><li>xueqiu.com/s/01179/392659106</li><li>finance.china.com/xiaofei/13004691/20260408/49395601.html</li><li>hoteltechreport.com/success-stories/revenue-management/duetto/amanta-hotels-residencies</li><li>hoteltechreport.com/revenue-management/revenue-management-systems/duetto</li><li>mews.com/en/blog/supercharge-your-revenue-management-strategy-with-duetto</li><li>duettocloud.com/en-us/success-stories/duetto-drives-28-increase-in-revpar-for-rimc-hotels-resorts-group</li><li>duettocloud.com/en-us/success-stories/graduate-hotels</li><li>superagi.com/top-10-ai-tools-transforming-revenue-analytics-in-the-hospitality-industry</li><li>pmc.ncbi.nlm.nih.gov/articles/pmc13470400</li><li>oxmaint.com/industries/hospitality/ai-housekeeping-optimization-workforce-scheduling</li><li>arxiv.org/pdf/2301.03382</li><li>sciencedirect.com/science/article/pii/s2199853125000228</li><li>sciencedirect.com/science/article/abs/pii/s0160738326001829</li><li>intercleanshow.com/news/data/ai-powered-housekeeping-innovations-in-the-hospitality-sector</li><li>hospitalityos.tech/research/ai-housekeeping-operations-optimization</li><li>hospitalityos.tech/research/hotel-labor-scheduling-ai-forecasting</li><li>hospitalityos.tech/research/reduce-hotel-labor-costs-ai</li><li>sohu.com/a/992830392_122279996</li><li>m.traveldaily.cn/article/169197</li><li>m.traveldaily.cn/article/178422</li><li>zhuanlan.zhihu.com/p/2073822731142014489</li><li>sgpjbg.com/bggroup/386.html</li><li>xiexietrip.com/news/global-hotel-labor-shortage-tech-ota</li><li>jtepms.cn/post/230.html</li><li>culture-travel.cctv.com/2026/04/23/artiufffve5r8drewux3lgm6260423.shtml</li><li>h33.top/report/20260830-51e4</li><li>jjckb.cn/20260603/24b0598f265646ec8d09d5f351682b45/c.html</li><li>cloud.tencent.com/developer/article/2632930</li><li>news.qq.com/rain/a/20260602a0a5qk00</li><li>guancha.cn/economy/2026_07_15_823781.shtml</li><li>finance.sina.cn/stock/jdts/2026-07-15/detail-inihwezh4864898.d.html</li><li>finance.people.com.cn/n1/2026/0319/c1004-40685001.html</li><li>wap.eastmoney.com/a/202606033759113546.html</li><li>epr.ink/m/news/143735</li><li>paulweiss.com/insights/client-memos/third-circuit-revives-algorithmic-pricing-antitrust-claims-against-casino-hotels</li><li>cov.com/en/news-and-insights/insights/2026/08/third-circuit-reinstates-algorithmic-pricing-antitrust-lawsuit-cornish-adebiyi-v-caesars-entertainment-inc</li><li>lit-antitrust.aoshearman.com/third-circuit-reverses-dismissal-of-algorithmic-price-fixing-claims-against-atlantic-city-casino-hotels</li><li>foley.com/insights/publications/2026/08/third-circuit-revives-algorithmic-price-fixing-claims-against-atlantic-city-hotel-casinos</li><li>alston.com/en/insights/publications/2026/08/cornish-adebiyi-caesars-entertainment-price-fixing</li><li>bakermckenzie.com/en/insight/publications/2026/08/united-states-third-circuit-revives-algorithmic-pricing-case</li><li>arnoldporter.com/en/perspectives/advisories/2026/08/leaving-las-vegas-third-circuit-breaks-from-ninth-circuit-ruling-on-algorithmic-pricing-claims</li><li>susmangodfrey.com/wins/susman-godfrey-secures-third-circuit-reversal-reviving-landmark-ai-price-fixing-suit-against-atlantic-city-casinos</li><li>moginlawllp.com/third-circuit-algorithmic-pricing-antitrust-cendyn</li><li>m.traveldaily.cn/article/189595</li><li>sohu.com/a/1010358927_121823491</li><li>pdf.dfcfw.com/pdf/h3_ap202603311820910990_1.pdf</li><li>fxbaogao.com/detail/5326035</li><li>fxbaogao.com/detail/4819484</li><li>ttgchina.com/2026/03/27/2026%e4%b8%ad%e5%9b%bd%e9%85%92%e5%ba%97%e4%b8%9a%e6%95%b0%e5%ad%97%e5%8c%96%e8%bd%ac%e5%9e%8b-%e8%81%9a%e7%84%a6%e6%8f%90%e8%b4%a8%e5%a2%9e%e6%95%88</li><li>shijigroup.cn/blog/158.html</li><li>ctha.com.cn/detail-79-111-4047.html</li><li>chmfe.com/sys-nd/5601.html</li><li>doi.org/10.1007/s00146-026-03060-3</li><li>doi.org/10.3390/tourhosp7040107</li><li>doi.org/10.48550/arxiv.2606.14314</li><li>doi.org/10.30525/2256-0742/2026-12-2-324-332</li><li>doi.org/10.48550/arxiv.2606.22698</li><li>doi.org/10.48550/arxiv.2609.17989</li><li>doi.org/10.48550/arxiv.2603.19423</li><li>doi.org/10.1016/j.tourman.2026.105557</li><li>doi.org/10.48550/arxiv.2605.16309</li><li>doi.org/10.48550/arxiv.2607.19837</li><li>doi.org/10.48550/arxiv.2602.10453</li><li>doi.org/10.48550/arxiv.2606.05806</li><li>doi.org/10.1016/j.jbusres.2024.114542</li><li>doi.org/10.1108/ijchm-08-2023-1271</li><li>doi.org/10.3390/bs15050696</li><li>doi.org/10.1016/j.technovation.2024.103081</li><li>doi.org/10.1080/02642069.2024.2305451</li><li>doi.org/10.1177/13548166261418787</li><li>doi.org/10.1108/tr-08-2025-0968</li><li>doi.org/10.1016/j.jik.2024.100545</li><li>doi.org/10.1787/8d900037-en</li><li>doi.org/10.70593/978-81-981367-8-7_1</li><li>doi.org/10.1080/13683500.2026.2674077</li><li>hijiffy.com/resources/articles/eu-ai-act</li><li>compound.law/en-de/ai-act/hospitality</li><li>nelios.com/eu-ai-act-hotel-websites-marketing</li><li>hotelnewsresource.com/article141048.html</li><li>200oksolutions.com/blog/the-eu-ai-acts-impact-on-hospitality-what-dynamic-pricing-and-guest-profiling-systems-must-do-now</li><li>allainews.net/ai-for-hotels-2026</li><li>hospitalityos.tech/research/hotel-ai-governance-policy-framework</li><li>hospitalityos.tech/research/hotel-ai-disclosure-guest-trust</li><li>letsaskclaire.com/hospitality/hotel-chatbot-compliance</li><li>pricepoint.co/blog/revenue-management-wont-be-a-job-anymore-and-thats-a-good-thing</li><li>hotelmanagement.mydigitalpublication.com/publication</li><li>hoteltechnologynews.com/2025/11/how-ai-will-rewrite-hotel-revenue-management-systems-in-2026</li><li>rategain.com/blog/ai-powered-revenue-management</li><li>jetstreamtech.io/blog/ai-hotel-revenue-management</li><li>otelai.com/resources/hotel-revenue-manager-ai-career-guide</li><li>otelciro.com/en/news/hotel-ai-adoption-82-percent-2026</li><li>hotellab.io/articles/how-ai-is-revolutionizing-revenue-management-in-the-hospitality-industry</li><li>otelciro.com/en/resources/blog/hotel-ai-adoption-82-percent-2026</li><li>hoteltechreport.com/revenue-management/revenue-management-systems/ideas</li><li>hoteltechreport.com/revenue-management/revenue-management-systems</li><li>hotel-online.com/news/ideas-recognized-in-three-categories-in-2026-hoteltechawards</li><li>ideas.com/client-success</li><li>ideas.com/hotel-rooms/casino-hotels</li><li>ideas.com/revenue-management-for-hospitality</li><li>ideas.com/hotel-rooms/resort-hotels</li><li>ideas.com/hospitality-technology-consulting</li><li>laborfinders.com/employers/blog/the-state-of-the-hospitality-staffing-shortage</li><li>marketscale.com/industries/hospitality/more-than-half-of-hotels-are-still-short-staffed-despite-70-raising-pay</li><li>higherme.com/blog/why-hotels-cant-find-staff-and-what-actually-fixes-it</li><li>theservicecompanies.com/overcoming-hospitality-staffing-shortages</li><li>ahla.com/news/rising-cost-staffing-challenges-persist-hotels-travel-demand-expected-hold-steady</li><li>tumihospitality.com/the-complete-guide-to-hotel-staffing-solutions</li><li>sorsx.com/blog/hotel-hiring-2026</li><li>corbettrestaurantgroup.com/insights/hotel-labor-stack-131-billion-may-2026</li><li>news.marketersmedia.com/resortcleaning-addresses-housekeeping-labor-shortage-with-new-tools/89204753</li><li>hotelfriend.com/blogpost/book-hotel-google-ai-mode</li><li>skift.com/2026/08/27/googles-agentic-hotel-booking-tool-comes-to-ai-mode</li><li>skift.com/2026/02/11/marriott-google-agentic-travel-booking</li><li>visitingmedia.com/blog/google-agentic-move-hotel-search-to-booking</li><li>hoteldive.com/news/google-introduces-ai-mode-hotel-booking/829265</li><li>seosherpa.com/google-is-testing-direct-hotel-booking-links-in-ai-mode</li><li>getaibook.com/news/google-ai-mode-adds-agentic-hotel-booking-flight-tracking</li><li>dmcquote.com/blog/post/google-ai-mode-hotel-booking-travel-agents</li><li>insidehs.com/google-ai-mode-hotel-booking</li><li>f9xr.github.io/articles/2026/08/27/book-hotel-google-ai-mode.html</li><li>stock.10jqka.com.cn/20260925/c680283701.shtml</li><li>163.com/dy/article/l818ll0e0511n33r.html</li><li>163.com/dy/article/l82ggfmb0519u3i5.html</li><li>ttgchina.com/2026/09/24/%e7%be%8e%e5%9b%a2%e5%8f%91%e5%b8%83%e6%97%a2%e7%99%bd%e6%97%97%e8%88%b0%e7%89%88-%e9%85%92%e5%ba%97ai%e4%bb%8e%e6%8f%90%e6%95%88%e5%8a%a9%e6%89%8b%e8%b5%b0%e5%90%91</li><li>163.com/dy/article/l94ka7rk0531b06v.html</li><li>baijiahao.baidu.com/s</li><li>pai.com.cn/p/01jx997a938d6jqr69vcnda1e6</li><li>readhub.cn/topic/8k0godhywkn</li><li>doi.org/10.1080/22243534.2026.2726013</li><li>doi.org/10.32920/25266955</li><li>doi.org/10.1145/3788879</li><li>doi.org/10.3390/iot7010005</li><li>doi.org/10.1016/j.caeai.2026.100653</li><li>doi.org/10.4324/9781003534006</li><li>openalex.org/w7133585207</li><li>doi.org/10.32996/jcsts.2026.8.10.3</li><li>doi.org/10.62311/nesx/rb42ag-978-81-68314-58-0</li><li>doi.org/10.48550/arxiv.2608.26626</li><li>doi.org/10.1016/j.rineng.2026.113300</li><li>doi.org/10.24108/preprints-3115683</li><li>doi.org/10.3390/soc16020058</li><li>doi.org/10.24136/oc.4214</li><li>doi.org/10.3390/admsci16030113</li><li>doi.org/10.36948/ijfmr.2026.v08i05.88518</li><li>doi.org/10.1016/j.jbusres.2026.116580</li><li>doi.org/10.4236/ajibm.2026.168047</li><li>doi.org/10.55214/2576-8484.v10i5.12854</li><li>doi.org/10.61424/gxscyq09</li><li>hotel-technology-conference.worldbigroup.com/blogs/eu-ai-act-hotel-technology-compliance</li><li>hospitalityos.tech/research/eu-ai-act-hotels-compliance</li><li>hotel-tech.ai/ai-in-hospitality-industry</li><li>idsnext.com/blogs/the-eu-ai-act-and-the-future-of-hospitality-in-the-age-of-intelligence</li><li>blog.csdn.net/2509_93962717/article/details/161893318</li><li>cnblogs.com/hcwl2025/p/20553665</li><li>finance.sina.com.cn/tech/roll/2026-10-28/doc-iniwttsa6690597.shtml</li><li>blog.csdn.net/2609_96044918/article/details/161478833</li><li>file2.foodmate.net/wenku2025/wj2025040700901.pdf</li><li>hoteltechreport.com/news/what-is-hotel-pms</li><li>csjcs.com/news/shangxun/article-jlwfjc-755199.html</li><li>yun88.com/product/11113.html</li><li>sohu.com/a/992916763_121218361</li><li>news.cn/globe/20260908/2b8ba615a21c4084aa31757cb273ecb5/c.html</li><li>huxiu.com/article/4865819.html</li><li>m.traveldaily.cn/article/186189</li><li>en.wikipedia.org/wiki/india_ai_impact_summit_2026</li><li>jiudianguancha.com/4/35555/2220473</li><li>ctha.com.cn/detail-2-59-3858.html</li><li>hospitalitynet.org/opinion/4135075/the-human-in-the-loop-hotel-where-ai-should-decide-recommend-and-stop</li><li>hospitalitynet.org/article/122000515/10-agentic-ai-trends-that-will-redefine-hotel-operations-in-2026</li><li>arxiv.org/pdf/2608.14611</li><li>arxiv.org/pdf/2602.03603</li><li>frenchydigital.com/blog/top-ai-agents-hotels-2026</li><li>hotelyearbook.com/article/122000515/10-agentic-ai-trends-that-will-redefine-hotel-operations-in-2026</li><li>arxiv.org/pdf/2504.19678</li></ol></details>
+      </div>
+    </main>
+    <nav class="toc" aria-label="目录"><h4>目录</h4>
+      <a class="" href="#h-0-酒店管理-ai-行业深度洞察">酒店管理：AI × 行业深度洞察</a><a class="" href="#h-1-导读-先给结论-再逐层证明">导读：先给结论，再逐层证明</a><a class="" href="#h-2-01-核心判断-ai-到底改变了什么">01 核心判断：AI 到底改变了什么</a><a class="" href="#h-3-02-业务流程与-ai-能力-变化发生在哪里-靠什么实现">02 业务流程与 AI 能力：变化发生在哪里、靠什么实现</a><a class="" href="#h-4-2-1-value-creation-domain-archet">2.1 Value Creation / Domain Archetype</a><a class="" href="#h-5-2-2-main-process-artifact-role-t">2.2 Main Process × Artifact × Role × Toolchain × KPI</a><a class="" href="#h-6-2-3-ai-capability-overlay">2.3 AI Capability Overlay</a><a class="" href="#h-7-2-4-judgment-process-capability-">2.4 Judgment → Process → Capability 映射</a><a class="" href="#h-8-2-5-高价值交叉点">2.5 高价值交叉点</a><a class="" href="#h-9-03-高价值场景-ai-在真实工作中怎么用">03 高价值场景：AI 在真实工作中怎么用</a><a class="" href="#h-10-场景-1-ai-住中服务智能体-对应-j1-j3">场景 1｜AI 住中服务智能体（对应 J1、J3）</a><a class="" href="#h-11-场景-2-ai-语音客服-前台-对应-j1-j6">场景 2｜AI 语音客服/前台（对应 J1、J6）</a><a class="" href="#h-12-场景-3-ai-收益管理与动态定价-对应-j2-j6-j7">场景 3｜AI 收益管理与动态定价（对应 J2、J6、J7）</a><a class="" href="#h-13-场景-4-ai-排班与人力优化-对应-j5-j7">场景 4｜AI 排班与人力优化（对应 J5、J7）</a><a class="" href="#h-14-场景-5-ai-分销与代理预订-对应-j4">场景 5｜AI 分销与代理预订（对应 J4）</a><a class="" href="#h-15-场景-6-ai-经营参谋-数字店长-对应-j5-j6">场景 6｜AI 经营参谋/数字店长（对应 J5、J6）</a><a class="" href="#h-16-场景-7-ai-客房清洁与机器人配送-对应-j1-j5">场景 7｜AI 客房清洁与机器人配送（对应 J1、J5）</a><a class="" href="#h-17-04-学术与行业进展-最近技术和产业发生了什么变化">04 学术与行业进展：最近技术和产业发生了什么变化</a><a class="" href="#h-18-academic-research">Academic / Research</a><a class="" href="#h-19-technology-product">Technology / Product</a><a class="" href="#h-20-industry-commercial-signals">Industry / Commercial Signals</a><a class="" href="#h-21-当前边界">当前边界</a><a class="" href="#h-22-05-产品-案例与实证-谁真正做到了-效果如何">05 产品、案例与实证：谁真正做到了，效果如何</a><a class="" href="#h-23-产品路线全景">产品路线全景</a><a class="" href="#h-24-代表产品">代表产品</a><a class="" href="#h-25-实名客户案例">实名客户案例</a><a class="" href="#h-26-evidence-ladder-汇总">Evidence Ladder 汇总</a><a class="" href="#h-27-06-ai-如何改变人的工作方式与组织分工">06 AI 如何改变人的工作方式与组织分工</a><a class="" href="#h-28-07-监管-法规-标准与风险-哪些约束决定-ai-能做到什么程度">07 监管、法规、标准与风险：哪些约束决定 AI 能做到什么程度</a><a class="" href="#h-29-08-ai-能自动到什么程度-自主边界与人工接管">08 AI 能自动到什么程度：自主边界与人工接管</a><a class="" href="#h-30-09-kpi-经济性与落地-怎么判断值不值-怎么实施">09 KPI、经济性与落地：怎么判断值不值、怎么实施</a><a class="" href="#h-31-kpi-体系">KPI 体系</a><a class="" href="#h-32-economics">Economics</a><a class="" href="#h-33-优先级与-tool-selection">优先级与 Tool Selection</a><a class="" href="#h-34-poc-pilot-scale-gate">PoC / Pilot / Scale Gate</a><a class="" href="#h-35-final-最终判断-哪些核心结论最终成立">Final 最终判断：哪些核心结论最终成立</a><a class="" href="#h-36-附录-judgment-traceability-matrix">附录：Judgment Traceability Matrix</a><a class="" href="#h-37-参考来源">参考来源</a>
+    </nav>
+  </div>
+</div>
+
+<script>
+(function () {
+  var root = document.documentElement;
+  try {
+    var saved = localStorage.getItem('sp-theme');
+    if (saved === 'light' || saved === 'dark') root.setAttribute('data-theme', saved);
+  } catch (e) {}
+
+  document.addEventListener('click', function (e) {
+    var btn = e.target.closest('[data-theme-toggle]');
+    if (!btn) return;
+    var isDark = root.getAttribute('data-theme') === 'dark' ||
+      (!root.getAttribute('data-theme') && matchMedia('(prefers-color-scheme: dark)').matches);
+    var next = isDark ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    try { localStorage.setItem('sp-theme', next); } catch (e2) {}
+  });
+
+  // 阅读进度
+  var bar = document.querySelector('.progress');
+  if (bar) {
+    var tick = function () {
+      var h = document.documentElement.scrollHeight - innerHeight;
+      bar.style.transform = 'scaleX(' + (h > 0 ? Math.min(1, scrollY / h) : 0) + ')';
+    };
+    addEventListener('scroll', tick, { passive: true });
+    addEventListener('resize', tick);
+    tick();
+  }
+
+  // 逐段淡入
+  var reveals = document.querySelectorAll('.reveal');
+  if (reveals.length) {
+    if (!('IntersectionObserver' in window)) {
+      reveals.forEach(function (el) { el.classList.add('in'); });
+    } else {
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (en) {
+          if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); }
+        });
+      }, { rootMargin: '0px 0px -8% 0px', threshold: 0.05 });
+      reveals.forEach(function (el) { io.observe(el); });
+    }
+  }
+
+  // 目录高亮
+  var links = [].slice.call(document.querySelectorAll('.toc a[href^="#"]'));
+  if (links.length && 'IntersectionObserver' in window) {
+    var targets = links.map(function (a) { return document.getElementById(a.getAttribute('href').slice(1)); }).filter(Boolean);
+    var spy = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (!en.isIntersecting) return;
+        links.forEach(function (a) { a.classList.toggle('active', a.getAttribute('href') === '#' + en.target.id); });
+      });
+    }, { rootMargin: '-15% 0px -70% 0px' });
+    targets.forEach(function (t) { spy.observe(t); });
+  }
+
+  // 数字滚动
+  var nums = document.querySelectorAll('[data-countup]');
+  if (nums.length && 'IntersectionObserver' in window && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    var nio = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (!en.isIntersecting) return;
+        nio.unobserve(en.target);
+        var el = en.target, full = el.textContent;
+        var m = full.match(/-?[\d.,]+/);
+        if (!m) return;
+        var target = parseFloat(m[0].replace(/,/g, ''));
+        if (!isFinite(target)) return;
+        var dec = (m[0].split('.')[1] || '').length, t0 = performance.now();
+        (function step(t) {
+          var k = Math.min(1, (t - t0) / 900);
+          var e = 1 - Math.pow(1 - k, 3);
+          el.textContent = full.replace(m[0], (target * e).toFixed(dec));
+          if (k < 1) requestAnimationFrame(step);
+          else el.textContent = full;
+        })(t0);
+      });
+    }, { threshold: 0.6 });
+    nums.forEach(function (n) { nio.observe(n); });
+  }
+
+  // 图表 tooltip
+  document.querySelectorAll('[data-chart]').forEach(function (box) {
+    var tip = box.querySelector('.chart-tip');
+    if (!tip) return;
+    var show = function (mark, ev) {
+      tip.innerHTML = '<b>' + (mark.dataset.value || '') + '</b>' + (mark.dataset.label || '');
+      tip.hidden = false;
+      var r = box.getBoundingClientRect();
+      var b = (ev && ev.clientX != null)
+        ? { x: ev.clientX, y: ev.clientY }
+        : (function () { var mr = mark.getBoundingClientRect(); return { x: mr.left + mr.width / 2, y: mr.top }; })();
+      tip.style.left = Math.max(48, Math.min(r.width - 48, b.x - r.left)) + 'px';
+      tip.style.top = Math.max(24, b.y - r.top) + 'px';
+    };
+    box.addEventListener('pointermove', function (e) {
+      var mark = e.target.closest('.mark');
+      if (mark) show(mark, e); else tip.hidden = true;
+    });
+    box.addEventListener('pointerleave', function () { tip.hidden = true; });
+    box.addEventListener('focusin', function (e) {
+      var mark = e.target.closest('.mark');
+      if (mark) show(mark, null);
+    });
+    box.addEventListener('focusout', function () { tip.hidden = true; });
+  });
+})();
+</script>
+<script>
+// CSS 平滑滚动在部分环境里是空操作，锚点会点不动。
+// 统一接管目录与引用标记的跳转，并在探测到没动时回退到瞬时滚动。
+// 注意回退必须显式写 behavior:'instant'——html 上的 scroll-behavior:smooth
+// 会让不带 behavior 的 scrollTo 一起失效。
+(function(){
+  var OFFSET=74;   // 吸顶栏高度
+  function jump(a){
+    var el=document.getElementById(decodeURIComponent(a.getAttribute('href').slice(1)));
+    if(!el) return false;
+    try{window.scrollTo({top:el.getBoundingClientRect().top+window.scrollY-OFFSET,behavior:'smooth'})}catch(_){}
+    if(history.replaceState) history.replaceState(null,'',a.getAttribute('href'));
+    // 校正到位，而不是只判断「有没有动」——平滑滚动可能动了一点就停下，
+    // 长页面跳到文末引用时实测会差 1200px 以上。两次校正覆盖慢动画的情况。
+    function settle(){
+      var d=el.getBoundingClientRect().top-OFFSET;
+      if(Math.abs(d)>8) window.scrollTo({top:window.scrollY+d,behavior:'instant'});
+    }
+    setTimeout(settle,340);
+    setTimeout(settle,900);
+    return true;
+  }
+  // 目录、正文引用上标、参考清单回链，三处都走同一套逻辑
+  document.addEventListener('click',function(e){
+    var a=e.target.closest('.toc a[href^="#"], .refmark a[href^="#"], a.refback[href^="#"]');
+    if(!a) return;
+    if(jump(a)) e.preventDefault();
+  });
+})();
+</script>
+</body>
+</html>

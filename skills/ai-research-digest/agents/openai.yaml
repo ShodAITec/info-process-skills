@@ -1,0 +1,13 @@
+interface:
+  display_name: 他山见闻
+  short_description: 从海外长文中筛选高价值内容并制作面向国内专业读者的中文精读周刊
+  default_prompt: 使用 $ai-research-digest 自动筛选最近7天的海外优质文章并生成一期中文精读周刊。
+  icon_small: assets/icon.svg
+  icon_large: assets/icon.svg
+policy:
+  allow_implicit_invocation: true
+  products:
+  - chatgpt
+  - codex
+  - api
+  - atlas
